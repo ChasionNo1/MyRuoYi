@@ -1,0 +1,10 @@
+<script setup>
+defineOptions({})
+</script>
+
+<template>
+  <div > register</div>
+</template>
+
+<style scoped>
+</style>
