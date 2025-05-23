@@ -48,7 +48,7 @@ const getLogoTextColor = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/variables.module.scss';
+@use '@/assets/styles/variables.module.scss';
 
 .sidebarLogoFade-enter-active {
   transition: opacity 1.5s;

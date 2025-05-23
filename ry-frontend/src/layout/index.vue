@@ -1,7 +1,7 @@
 <template>
   <div :class="classObj" class="app-wrapper" :style="{ '--current-color': theme }">
     <div v-if="device === 'mobile' && sidebar.opened" class="drawer-bg" @click="handleClickOutside"/>
-    <sidebar v-if="!sidebar.hide" class="sidebar-container" />
+    <Sidebar v-if="!sidebar.hide" class="sidebar-container" />
     <!-- <div :class="{ hasTagsView: needTagsView, sidebarHide: sidebar.hide }" class="main-container">
       <div :class="{ 'fixed-header': fixedHeader }">
         <navbar @setLayout="setLayout" />
@@ -20,6 +20,9 @@ import Sidebar from './components/Siderbar/index.vue'
 import useAppStore from '@/stores/app'
 import useSettingsStore from '@/stores/settings'
 import { computed, watch, ref, watchEffect } from 'vue'
+defineOptions({
+  name:'BasicLayout'
+})
 
 const settingsStore = useSettingsStore()
 const theme = computed(() => settingsStore.theme)
@@ -65,11 +68,11 @@ function setLayout() {
 </script>
 
 <style lang="scss" scoped>
-  @import "@/assets/styles/mixin.scss";
-  @import "@/assets/styles/variables.module.scss";
+  @use "@/assets/styles/mixin.scss" as mixin;
+  @use "@/assets/styles/variables.module.scss";
 
 .app-wrapper {
-  @include clearfix;
+  @include mixin.clearfix;
   position: relative;
   height: 100%;
   width: 100%;
