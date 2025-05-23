@@ -3,9 +3,19 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import 'element-plus/dist/index.css'
-const app = createApp(App)
+// svg图标
+import 'virtual:svg-icons-register'
+import SvgIcon from '@/components/SvgIcon'
+import elementIcons from '@/components/SvgIcon/svgicon'
+// 引入插件
+import piniaPluginPersist from 'pinia-plugin-persistedstate'; 
 
-app.use(createPinia())
+const app = createApp(App)
+const pinia = createPinia()
+pinia.use(piniaPluginPersist);
+app.use(pinia)
 app.use(router)
+app.use(elementIcons)
+app.component('svg-icon', SvgIcon)
 
 app.mount('#app')
