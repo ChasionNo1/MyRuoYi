@@ -1,10 +1,13 @@
 <template>
   <div class="sidebar-logo-container" :class="{ 'collapse': collapse }">
     <transition name="sidebarLogoFade">
+      <!-- key 是一个特殊的属性，用于给每个节点做一个唯一标识。 -->
+       <!-- 如果collapse 为true，则显示这个，折叠状态，是否显示图标，显示图标就不显示文字了 -->
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
         <img v-if="logo" :src="logo" class="sidebar-logo" />
         <h1 v-else class="sidebar-title">{{ title }}</h1>
       </router-link>
+      <!-- 展开状态，一样是否显示图标，但是文字一定显示的 -->
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
         <img v-if="logo" :src="logo" class="sidebar-logo" />
         <h1 class="sidebar-title">{{ title }}</h1>
@@ -17,8 +20,13 @@
 import logo from '@/assets/logo/logo.png'
 import useSettingsStore from '@/stores/settings'
 import variables from '@/assets/styles/variables.module.scss'
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
+defineOptions({
+  name: 'LogoPage'
+})
+
+// 父子组件传递参数
 defineProps({
   collapse: {
     type: Boolean,
@@ -26,8 +34,10 @@ defineProps({
   }
 })
 
-const title = import.meta.env.VITE_APP_TITLE
+// const title = 
+const title = ref('若依管理系统')
 const settingsStore = useSettingsStore()
+// 设置侧边栏的主体，控制颜色
 const sideTheme = computed(() => settingsStore.sideTheme)
 
 // 获取Logo背景色
