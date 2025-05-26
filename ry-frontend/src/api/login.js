@@ -1,28 +1,36 @@
 import request from '@/utils/request'
 
 // 登录方法
-export function login(username, password, code, uuid) {
-  const data = {
-    username,
-    password,
-    code,
-    uuid
-  }
-  return request({
-    url: '/login',
-    headers: {
-      isToken: false,
-      repeatSubmit: false
-    },
-    method: 'post',
-    data: data
-  })
-}
+// export function login(username, password, code, uuid) {
+//   const data = {
+//     username,
+//     password,
+//     code,
+//     uuid
+//   }
+//   return request({
+//     url: '/login',
+//     headers: {
+//       isToken: false,
+//       repeatSubmit: false
+//     },
+//     method: 'post',
+//     data: data
+//   })
+// }
 
+export function login(params) {
+  return request({
+    url: '/auth/login',
+    method: 'post',
+    data: params
+  })
+  
+}
 // 注册方法
 export function register(data) {
   return request({
-    url: '/register',
+    url: '/auth/register',
     headers: {
       isToken: false
     },

@@ -38,7 +38,7 @@ const usePermissionStore = defineStore('permission', {
         },
 
         // 路由生成
-        generateRoutes(roles) {
+        generateRoutes() {
             return new Promise(resolve => {
                 // 1. 从后端获取路由配置
                 getRouters().then(res => {

@@ -1,11 +1,18 @@
 <script setup>
 import {ref} from 'vue'
-import { ElMessageBox } from "element-plus"
+import { ElMessage } from "element-plus"
+import useUserStore from '@/stores/user'
+import { useRouter } from "vue-router";
 defineOptions({
   name: 'RegisterPage'
 })
+// 获取路由实例
+const router = useRouter();
 const title = ref('注册')
-const registerForm = ref({
+const registerRef = ref()
+const userStore = useUserStore()
+// 注册的表单数据
+const registerFormStatus = ref({
   username: "",
   password: "",
   confirmPassword: "",
@@ -13,7 +20,7 @@ const registerForm = ref({
   uuid: ""
 })
 const equalToPassword = (rule, value, callback) => {
-  if (registerForm.value.password !== value) {
+  if (registerFormStatus.value.password !== value) {
     callback(new Error("两次输入的密码不一致"))
   } else {
     callback()
@@ -36,18 +43,40 @@ const registerRules = {
   ],
   code: [{ required: true, trigger: "change", message: "请输入验证码" }]
 }
-const handleRegister = () => {
-  console.log('register')
+
+/**
+ * v1: 简单注册，没要验证码等操作
+ */
+const handleRegister = async () => {
+  try {
+    // 先进行参数校验
+    await registerRef.value.validate()
+    // 校验通过，发送请求
+    const value = {
+      username: registerFormStatus.value.username,
+      password: registerFormStatus.value.password
+    }
+    const result = await userStore.register(value)
+    console.log(result)
+    if (result.code === 200) {
+        ElMessage.success("注册成功")
+        router.push('/auth/login')
+    }else {
+      ElMessage.error('注册失败')
+    }
+  }catch (error) {
+    console.log(error)
+  }
 }
 </script>
 
 <template>
  <div class="register">
-  <el-form ref="registerRef" :model="registerForm" :rules="registerRules" class="register-form">
+  <el-form ref="registerRef" :model="registerFormStatus" :rules="registerRules" class="register-form">
       <h3 class="title">{{ title }}</h3>
       <el-form-item prop="username">
         <el-input 
-          v-model="registerForm.username" 
+          v-model="registerFormStatus.username" 
           type="text" 
           size="large" 
           auto-complete="off" 
@@ -58,7 +87,7 @@ const handleRegister = () => {
       </el-form-item>
       <el-form-item prop="password">
         <el-input
-          v-model="registerForm.password"
+          v-model="registerFormStatus.password"
           type="password"
           size="large" 
           auto-complete="off"
@@ -70,7 +99,7 @@ const handleRegister = () => {
       </el-form-item>
       <el-form-item prop="confirmPassword">
         <el-input
-          v-model="registerForm.confirmPassword"
+          v-model="registerFormStatus.confirmPassword"
           type="password"
           size="large" 
           auto-complete="off"
@@ -83,7 +112,7 @@ const handleRegister = () => {
       <el-form-item prop="code" v-if="captchaEnabled">
         <el-input
           size="large" 
-          v-model="registerForm.code"
+          v-model="registerFormStatus.code"
           auto-complete="off"
           placeholder="验证码"
           style="width: 63%"

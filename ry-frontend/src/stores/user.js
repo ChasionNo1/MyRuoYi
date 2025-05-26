@@ -1,13 +1,45 @@
 import router from '@/router'
 import { defineStore } from 'pinia'
 import { ElMessageBox, } from 'element-plus'
-import { login, logout, getInfo } from '@/api/login'
+import { login, logout, getInfo, register } from '@/api/login'
 // import { getToken, setToken, removeToken } from '@/utils/auth'
 import { isHttp, isEmpty } from "@/utils/validate"
 import defAva from '@/assets/images/profile.jpg'
 
 const useUserStore = defineStore(
-  'user',)
+  'user', {
+  state: () => ({
+    token: '',
+    roles: [],
+  }),
+  actions: {
+    // 注册方法:
+    async register(params) {
+      try {
+        const result = await register(params)
+        return result
+      } catch (error) {
+        throw new Error(error)
+      }
+    },
+    // 登录方法，此时存token
+    async login(params) {
+      try {
+        const result = await login(params)
+        this.token = result.token
+        return result
+      } catch (error) {
+        throw new Error(error)
+      }
+    }
+
+    // 获取用户信息
+
+    // 退出登录
+  }
+}, {
+  persist: true
+})
 //   {
 //     state: () => ({
 //       token: getToken(),
