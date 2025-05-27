@@ -17,6 +17,7 @@ const showLogo = ref(true)
 
 const sideTheme = computed(() => settingsStore.sideTheme)
 const sidebarRouters = computed(() => permissionStore.sidebarRouters)
+console.log('sidebar routers:' + sidebarRouters.value)
 
 // 获取菜单背景色
 const getMenuBackground = computed(() => {
@@ -48,7 +49,6 @@ const getMenuTextColor = computed(() => {
         :key="route.path + index"
         :item="route"
         :base-path="route.path"
-        
         ></SidebarItem>
       </el-menu>
     </el-scrollbar>

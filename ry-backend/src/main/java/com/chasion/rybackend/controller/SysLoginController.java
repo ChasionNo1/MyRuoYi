@@ -1,5 +1,6 @@
 package com.chasion.rybackend.controller;
 
+import com.chasion.rybackend.entities.SysMenu;
 import com.chasion.rybackend.resp.Result;
 import com.chasion.rybackend.resp.ResultCode;
 import com.chasion.rybackend.service.ISysMenuService;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -33,8 +35,11 @@ public class SysLoginController {
     }
 
     // 获取路由信息
-    @GetMapping("/getRouters"){
-        // 获取userId
+    @GetMapping("/getRouters")
+    public Result<List<SysMenu>> getRouters() {
+        // 获取userId，这里先固定一个，后续通过thread local配合拦截器添加
+        List<SysMenu> menus = menuService.selectMenuList(1L);
+        return Result.success("获取成功", menuService.buildMenuTree(menus));
 
     }
 }

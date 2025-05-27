@@ -19,7 +19,7 @@ import usePermissionStore from '@/store/modules/permission'
 NProgress.configure({ showSpinner: false })
 
 // 定义免登录的白名单路径
-const whiteList = ['/login', '/register']
+const whiteList = ['/auth/login', '/auth/register']
 
 // 判断给定的路径是否在白名单中
 const isWhiteList = (path) => {
@@ -31,7 +31,8 @@ const userStore = useUserStore()
 const permissionStore = usePermissionStore()
 
 // 全局前置守卫，在路由跳转前执行
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async(to, from, next) => {
+    console.log('------enter before router------')
     // 开始显示进度条
     NProgress.start()
     // 检查本地是否存在 token
@@ -40,7 +41,7 @@ router.beforeEach(async (to, from, next) => {
         to.meta.title && useSettingsStore().setTitle(to.meta.title)
 
         // 如果用户已经登录，且目标路径是登录页
-        if (to.path === '/login') {
+        if (to.path === '/auth/login') {
             next({ path: '/' })
             NProgress.done()
             // 如果目标路径在白名单中
@@ -91,7 +92,7 @@ router.beforeEach(async (to, from, next) => {
             next()
         } else {
             // 重定向到登录页，并携带当前路径作为重定向参数
-            next(`/login?redirect=${to.fullPath}`)
+            next(`/auth/login?redirect=${to.fullPath}`)
             // 完成进度条
             NProgress.done()
         }

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+
 public interface ISysMenuService {
 
     /**
@@ -15,4 +15,17 @@ public interface ISysMenuService {
      * @return 菜单列表
      */
     public List<SysMenu> selectMenuList(Long userId);
+
+    public List<SysMenu> selectMenuList(SysMenu menu, Long userId);
+
+    /**
+     * 根据用户ID查询菜单树信息
+     *
+     * @param
+     * @return 菜单列表
+     */
+//    List<SysMenu> selectMenuTreeByUserId(Long userId);
+
+
+    public List<SysMenu> buildMenuTree(List<SysMenu> menus);
 }
