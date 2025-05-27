@@ -9,6 +9,7 @@ import SvgIcon from '@/components/SvgIcon'
 import elementIcons from '@/components/SvgIcon/svgicon'
 // 引入插件
 import piniaPluginPersist from 'pinia-plugin-persistedstate'; 
+import './permission' // permission control
 
 const app = createApp(App)
 const pinia = createPinia()

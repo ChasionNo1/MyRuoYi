@@ -40,6 +40,7 @@ const handleLogin = async () => {
         message: '登录成功',
         type: 'success',
       })
+      userStore.token = result.data
       router.push('/')
     }
   } catch (error) {

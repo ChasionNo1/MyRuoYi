@@ -17,4 +17,6 @@ public interface ISysUserService {
 
     // 登录
     public String loginUser(String username, String password);
+
+    SysUser getUserByUserId(Long userId);
 }

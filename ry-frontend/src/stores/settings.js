@@ -38,11 +38,11 @@ const useSettingsStore = defineStore(
           this[key] = value;
         }
       },
-      //   // 设置网页标题
-      //   setTitle(title) {
-      //     this.title = title;
-      //     useDynamicTitle();
-      //   },
+        // 设置网页标题
+        setTitle(title) {
+          this.title = title;
+          useDynamicTitle();
+        },
         // 切换暗黑模式
         toggleTheme() {
           this.isDark = !this.isDark;

@@ -23,7 +23,7 @@ const usePermissionStore = defineStore('permission', {
     }),
     actions: {
         // 设置路由
-        setRouters(routes) {
+        setRoutes(routes) {
             this.addRoutes = routes
             this.routes = constantRoutes.concat(routes)
         },
@@ -42,8 +42,10 @@ const usePermissionStore = defineStore('permission', {
             return new Promise(resolve => {
                 // 1. 从后端获取路由配置
                 getRouters().then(res => {
+                  console.log("stores/permission:routers", res.data )
                     // 2. 深拷贝路由数据（用于不同场景处理）
                     const sdata = JSON.parse(JSON.stringify(res.data))
+                    console.log(sdata)
                     const rdata = JSON.parse(JSON.stringify(res.data))
                     const defaultData = JSON.parse(JSON.stringify(res.data))
 
@@ -61,6 +63,7 @@ const usePermissionStore = defineStore('permission', {
                     // 6. 更新状态
                     this.setRoutes(rewriteRoutes)
                     this.setSidebarRouters(constantRoutes.concat(sidebarRoutes))
+                    console.log('sidebar router', this.sidebarRouters)
                     this.setDefaultRoutes(sidebarRoutes)
                     this.setTopbarRoutes(defaultRoutes)
 

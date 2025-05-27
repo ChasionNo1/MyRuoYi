@@ -16,4 +16,7 @@ public interface SysUserMapper {
 
     @Select("select * from sys_user where user_name=#{username}")
     SysUser selectUserByUsername(String username);
+
+    @Select("select * from sys_user where user_id=#{userId}")
+    SysUser selectUserByUserId(Long id);
 }

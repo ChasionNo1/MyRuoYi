@@ -1,9 +1,11 @@
 package com.chasion.rybackend.service;
 
 import com.chasion.rybackend.entities.SysMenu;
+import com.chasion.rybackend.entities.vo.RouterVo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 
 public interface ISysMenuService {
@@ -28,4 +30,29 @@ public interface ISysMenuService {
 
 
     public List<SysMenu> buildMenuTree(List<SysMenu> menus);
+
+    /**
+     * 根据角色ID查询权限
+     *
+     * @param roleId 角色ID
+     * @return 权限列表
+     */
+    public Set<String> selectMenuPermsByRoleId(Long roleId);
+
+    /**
+     * 根据用户ID查询权限
+     *
+     * @param userId 用户ID
+     * @return 权限列表
+     */
+    public Set<String> selectMenuPermsByUserId(Long userId);
+
+    /**
+     * 构建前端路由所需要的菜单
+     *
+     * @param menus 菜单列表
+     * @return 路由列表
+     */
+    List<RouterVo> buildMenus(List<SysMenu> menus);
+
 }

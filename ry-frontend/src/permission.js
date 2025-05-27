@@ -10,11 +10,11 @@ import { isHttp, isPathMatch } from '@/utils/validate'
 // 引入是否重新登录的状态标识
 import { isRelogin } from '@/utils/request'
 // 引入用户状态管理的组合式 store
-import useUserStore from '@/store/modules/user'
+import useUserStore from '@/stores/user'
 // 引入设置状态管理的组合式 store
-import useSettingsStore from '@/store/modules/settings'
+import useSettingsStore from '@/stores/settings'
 // 引入权限状态管理的组合式 store
-import usePermissionStore from '@/store/modules/permission'
+import usePermissionStore from '@/stores/permission'
 // 配置进度条，不显示旋转的加载图标
 NProgress.configure({ showSpinner: false })
 
@@ -27,14 +27,13 @@ const isWhiteList = (path) => {
     return whiteList.some(pattern => isPathMatch(pattern, path))
 }
 
-const userStore = useUserStore()
-const permissionStore = usePermissionStore()
 
 // 全局前置守卫，在路由跳转前执行
-router.beforeEach(async(to, from, next) => {
-    console.log('------enter before router------')
+router.beforeEach(async (to, from, next) => {
     // 开始显示进度条
     NProgress.start()
+    const userStore = useUserStore()
+    const permissionStore = usePermissionStore()
     // 检查本地是否存在 token
     if (userStore.token) {
         // 如果目标路由有 meta.title 属性，则设置页面标题
@@ -73,7 +72,7 @@ router.beforeEach(async(to, from, next) => {
                     next({ ...to, replace: true })
                 } catch (error) {
                     // 如果获取用户信息失败，调用用户状态管理中的 logOut 方法退出登录
-                    await useUserStore.logout()
+                    // await useUserStore.logout()
                     ElMessage.error(error)
                     // 重定向到首页
                     next({ path: '/' })

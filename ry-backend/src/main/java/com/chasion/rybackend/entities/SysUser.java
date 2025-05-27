@@ -62,5 +62,11 @@ public class SysUser extends BaseEntity{
         return userId != null && 1L == userId;
     }
 
+    public boolean isAdmin()
+    {
+        return isAdmin(this.userId);
+    }
+
+
 
 }

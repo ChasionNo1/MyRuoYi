@@ -43,4 +43,9 @@ public class SysUserServiceImpl implements ISysUserService {
         }
     }
 
+    @Override
+    public SysUser getUserByUserId(Long userId) {
+        return userMapper.selectUserByUserId(userId);
+    }
+
 }
