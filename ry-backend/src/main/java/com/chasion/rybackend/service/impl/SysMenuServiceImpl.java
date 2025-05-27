@@ -269,6 +269,30 @@ public class SysMenuServiceImpl implements ISysMenuService {
         }
         return routers;
     }
+
+    /**
+     * 根据用户ID查询菜单
+     *
+     * @param userId 用户名称
+     * @return 菜单列表
+     */
+    @Override
+    public List<SysMenu> selectMenuTreeByUserId(Long userId)
+    {
+        List<SysMenu> menus = null;
+//        这里先简单测试一下
+        if (userId == 1L)
+        {
+            menus = menuMapper.selectMenuTreeAll();
+        }
+        else
+        {
+            menus = menuMapper.selectMenuTreeByUserId(userId);
+        }
+        return getChildPerms(menus, 0);
+    }
+
+
     /**
      * 获取路由名称
      *

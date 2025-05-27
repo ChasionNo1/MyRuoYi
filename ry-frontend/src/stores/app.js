@@ -1,9 +1,11 @@
 // 定义后台管理系统应用状态存储模块
 import { defineStore } from "pinia"
+
 const useAppStore = defineStore('app', {
     state: () => ({
         sidebar: {
             // 侧边栏是否打开（从 Cookie 读取，默认值：true）
+            // 不再从cookie中读取，从本地持久化读取
             opened: true,
             // 是否禁用动画（切换侧边栏时）
             withoutAnimation: false,

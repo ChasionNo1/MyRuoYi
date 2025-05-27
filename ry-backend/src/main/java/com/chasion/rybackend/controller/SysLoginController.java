@@ -49,7 +49,8 @@ public class SysLoginController {
     @GetMapping("/getRouters")
     public Result<List<RouterVo>> getRouters() {
         // 获取userId，这里先固定一个，后续通过thread local配合拦截器添加
-        List<SysMenu> menus = menuService.selectMenuList(1L);
+        // 这里是获取树形的数据，再整形
+        List<SysMenu> menus = menuService.selectMenuTreeByUserId(1L);
         return Result.success("获取成功", menuService.buildMenus(menus));
 
     }
