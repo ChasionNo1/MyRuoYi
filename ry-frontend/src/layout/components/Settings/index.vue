@@ -79,10 +79,11 @@
 </template>
 
 <script setup>
-import useAppStore from '@/store/modules/app'
-import useSettingsStore from '@/store/modules/settings'
-import usePermissionStore from '@/store/modules/permission'
+import useAppStore from '@/stores/app'
+import useSettingsStore from '@/stores/settings'
+import usePermissionStore from '@/stores/permission'
 import { handleThemeStyle } from '@/utils/theme'
+import {ref, getCurrentInstance, computed} from 'vue'
 
 const { proxy } = getCurrentInstance()
 const appStore = useAppStore()

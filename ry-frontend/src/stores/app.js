@@ -5,11 +5,12 @@ const useAppStore = defineStore('app', {
     state: () => ({
         sidebar: {
             // 侧边栏是否打开（从 Cookie 读取，默认值：true）
-            // 不再从cookie中读取，从本地持久化读取
+            // 这个是控制，打开和折叠成mini状态的
             opened: true,
             // 是否禁用动画（切换侧边栏时）
             withoutAnimation: false,
             // 是否隐藏侧边栏（常用于移动端或特殊布局）
+            // 这个是控制有和无的
             hide: false,
             // 侧边栏状态
             status: 1
