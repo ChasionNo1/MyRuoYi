@@ -42,10 +42,10 @@ const usePermissionStore = defineStore('permission', {
             return new Promise(resolve => {
                 // 1. 从后端获取路由配置
                 getRouters().then(res => {
-                  console.log("stores/permission:routers", res.data )
+                  // console.log("stores/permission:routers", res.data )
                     // 2. 深拷贝路由数据（用于不同场景处理）
                     const sdata = JSON.parse(JSON.stringify(res.data))
-                    console.log(sdata)
+                    // console.log(sdata)
                     const rdata = JSON.parse(JSON.stringify(res.data))
                     const defaultData = JSON.parse(JSON.stringify(res.data))
 
@@ -63,7 +63,7 @@ const usePermissionStore = defineStore('permission', {
                     // 6. 更新状态
                     this.setRoutes(rewriteRoutes)
                     this.setSidebarRouters(constantRoutes.concat(sidebarRoutes))
-                    console.log('sidebar router', this.sidebarRouters)
+                    // console.log('sidebar router', this.sidebarRouters)
                     this.setDefaultRoutes(sidebarRoutes)
                     this.setTopbarRoutes(defaultRoutes)
 
@@ -74,10 +74,18 @@ const usePermissionStore = defineStore('permission', {
 
     }
 })
+/**
+ * 遍历后台传来的路由字符串，转换为组件对象
+ * lastRouter：可选参数，默认为 false，表示父路由对象，用于递归调用时传递父路由信息。
+ * type：可选参数，默认为 false，用于控制是否对路由的子路由进行特殊处理。
+ */
 function filterAsyncRouter(asyncRouterMap, lastRouter = false, type = false) {
   return asyncRouterMap.filter(route => {
-    // 1. 处理特殊组件（Layout、ParentView、InnerLink）
+    if (type && route.children) {
+      route.children = filterChildren(route.children)
+    }
     if (route.component) {
+      // Layout ParentView 组件特殊处理
       if (route.component === 'Layout') {
         route.component = Layout
       } else if (route.component === 'ParentView') {
@@ -85,27 +93,30 @@ function filterAsyncRouter(asyncRouterMap, lastRouter = false, type = false) {
       } else if (route.component === 'InnerLink') {
         route.component = InnerLink
       } else {
-        // 2. 动态加载views目录下的组件
         route.component = loadView(route.component)
       }
     }
-    
-    // 3. 递归处理子路由
-    if (route.children && route.children.length) {
+    if (route.children != null && route.children && route.children.length) {
       route.children = filterAsyncRouter(route.children, route, type)
     } else {
       delete route['children']
       delete route['redirect']
     }
-    
     return true
   })
 }
+/**
+ * childrenMap：子路由配置数组，每个元素是一个子路由对象。
+ * lastRouter：可选参数，默认为 false，表示父路由对象，用于生成子路由的完整路径。
+ */
 function filterChildren(childrenMap, lastRouter = false) {
   var children = []
   childrenMap.forEach(el => {
+    // 如果 lastRouter 存在，则将子路由的路径拼接在父路由路径后面。
     el.path = lastRouter ? lastRouter.path + '/' + el.path : el.path
+    // 递归处理子路由：如果子路由对象有子路由且组件为 'ParentView'，则递归调用 filterChildren 函数处理子子路由。
     if (el.children && el.children.length && el.component === 'ParentView') {
+      // 将处理后的子路由对象添加到 children 数组中：如果子路由对象没有子路由或组件不为 'ParentView'，则直接将其添加到 children 数组中。
       children = children.concat(filterChildren(el.children, el))
     } else {
       children.push(el)

@@ -11,6 +11,8 @@ import elementIcons from '@/components/SvgIcon/svgicon'
 import piniaPluginPersist from 'pinia-plugin-persistedstate'; 
 import './permission' // permission control
 
+import '@/assets/styles/index.scss' // global css
+
 const app = createApp(App)
 const pinia = createPinia()
 pinia.use(piniaPluginPersist);
