@@ -94,11 +94,13 @@ function logout() {
   }).catch(() => { })
 }
 
+// 向父组件发送修改请求
 const emits = defineEmits(['setLayout'])
 function setLayout() {
   emits('setLayout')
 }
 
+// 切换主题
 function toggleTheme() {
   settingsStore.toggleTheme()
 }

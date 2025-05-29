@@ -67,7 +67,7 @@ function setLayout() {
   <div class="app-wrapper" :class="classObj" :style="{'--current-color': theme}">
     <!-- 手机端的蒙层，当当前的设备是手机，并且侧边栏是打开状态，点击 -->
     <div v-if="device === 'mobile' && sidebar.opened" class="drawer-bg" @click="handleClickOutside"></div>
-    <Sidebar v-if="!sidebar.hide" class="sidebar-container"></Sidebar>
+    <sidebar v-if="!sidebar.hide" class="sidebar-container"></sidebar>
 <!-- 定义了两个动态加载的类，标签页导航和侧边栏隐藏 -->
       <div :class="{ hasTagsView: needTagsView, sidebarHide: sidebar.hide }" class="main-container">
         <div :class="{ 'fixed-header': fixedHeader }">
