@@ -1,162 +1,73 @@
-import router from '@/router'
-import { defineStore } from 'pinia'
-import { ElMessageBox, } from 'element-plus'
-import { login, logout, getInfo, register } from '@/api/login'
-// import { getToken, setToken, removeToken } from '@/utils/auth'
-import { isHttp, isEmpty } from "@/utils/validate"
-import defAva from '@/assets/images/profile.jpg'
+import { defineStore } from 'pinia';
+import { ref, computed } from 'vue';
+import { login as loginApi, getInfo as getInfoApi, register as registerApi } from '@/api/login';
 
-const useUserStore = defineStore(
-  'user', {
-  state: () => ({
-    token: '',
-    roles: [],
-    permissions: []
-  }),
-  actions: {
-    // 注册方法:
-    async register(params) {
-      try {
-        const result = await register(params)
-        return result
-      } catch (error) {
-        throw new Error(error)
-      }
-    },
-    // 登录方法，此时存token
-    async login(params) {
-      try {
-        const result = await login(params)
-        this.token = result.token
-        return result
-      } catch (error) {
-        throw new Error(error)
-      }
-    },
+export const useUserStore = defineStore('user', () => {
+  const token = ref('');
+  const roles = ref([]);
+  const permissions = ref([]);
 
-    // 获取用户信息
-    async getInfo() {
-      return new Promise((resolve, reject) => {
-        getInfo().then(res => {
-          // const user = res.user
-          // let avatar = user.avatar || ""
-          // if (!isHttp(avatar)) {
-          //   avatar = (isEmpty(avatar)) ? defAva : import.meta.env.VITE_APP_BASE_API + avatar
-          // }
-          if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-            this.roles = res.roles
-            this.permissions = res.permissions
-          } else {
-            this.roles = ['ROLE_DEFAULT']
-          }
-          // this.id = user.userId
-          // this.name = user.userName
-          // this.nickName = user.nickName
-          // this.avatar = avatar
-          // /* 初始密码提示 */
-          // if (res.isDefaultModifyPwd) {
-          //   ElMessageBox.confirm('您的密码还是初始密码，请修改密码！', '安全提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
-          //     router.push({ name: 'Profile', params: { activeTab: 'resetPwd' } })
-          //   }).catch(() => { })
-          // }
-          // /* 过期密码提示 */
-          // if (!res.isDefaultModifyPwd && res.isPasswordExpired) {
-          //   ElMessageBox.confirm('您的密码已过期，请尽快修改密码！', '安全提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
-          //     router.push({ name: 'Profile', params: { activeTab: 'resetPwd' } })
-          //   }).catch(() => { })
-          // }
-          resolve(res)
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
-
-
-    // 退出登录
+  // 注册方法
+  async function register(params) {
+    try {
+      const result = await registerApi(params); // 使用重命名后的 API
+      return result;
+    } catch (error) {
+      throw new Error(error);
+    }
   }
+
+  // 登录方法
+  async function login(params) {
+    try {
+      const result = await loginApi(params); // 使用重命名后的 API
+      token.value = result.token;
+      return result;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  // 获取用户信息
+  function getInfo() {
+    return new Promise((resolve, reject) => {
+      getInfoApi() // 使用重命名后的 API
+        .then((res) => {
+          if (res.roles && res.roles.length > 0) {
+            roles.value = res.roles;
+            permissions.value = res.permissions;
+          } else {
+            roles.value = ['ROLE_DEFAULT'];
+          }
+          resolve(res);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
+
+  // 退出登录
+  function logout() {
+    token.value = '';
+    roles.value = [];
+    permissions.value = [];
+  }
+
+  const hasAdminRole = computed(() => roles.value.includes('admin'));
+
+  return {
+    token,
+    roles,
+    permissions,
+    register,
+    login,
+    getInfo,
+    logout,
+    hasAdminRole
+  };
 }, {
   persist: true
-})
-//   {
-//     state: () => ({
-//       token: getToken(),
-//       id: '',
-//       name: '',
-//       nickName: '',
-//       avatar: '',
-//       roles: [],
-//       permissions: []
-//     }),
-//     actions: {
-//       // 登录
-//       login(userInfo) {
-//         const username = userInfo.username.trim()
-//         const password = userInfo.password
-//         const code = userInfo.code
-//         const uuid = userInfo.uuid
-//         return new Promise((resolve, reject) => {
-//           login(username, password, code, uuid).then(res => {
-//             setToken(res.token)
-//             this.token = res.token
-//             resolve()
-//           }).catch(error => {
-//             reject(error)
-//           })
-//         })
-//       },
-//       // 获取用户信息
-//       getInfo() {
-//         return new Promise((resolve, reject) => {
-//           getInfo().then(res => {
-//             const user = res.user
-//             let avatar = user.avatar || ""
-//             if (!isHttp(avatar)) {
-//               avatar = (isEmpty(avatar)) ? defAva : import.meta.env.VITE_APP_BASE_API + avatar
-//             }
-//             if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-//               this.roles = res.roles
-//               this.permissions = res.permissions
-//             } else {
-//               this.roles = ['ROLE_DEFAULT']
-//             }
-//             this.id = user.userId
-//             this.name = user.userName
-//             this.nickName = user.nickName
-//             this.avatar = avatar
-//             /* 初始密码提示 */
-//             if(res.isDefaultModifyPwd) {
-//               ElMessageBox.confirm('您的密码还是初始密码，请修改密码！',  '安全提示', {  confirmButtonText: '确定',  cancelButtonText: '取消',  type: 'warning' }).then(() => {
-//                 router.push({ name: 'Profile', params: { activeTab: 'resetPwd' } })
-//               }).catch(() => {})
-//             }
-//             /* 过期密码提示 */
-//             if(!res.isDefaultModifyPwd && res.isPasswordExpired) {
-//               ElMessageBox.confirm('您的密码已过期，请尽快修改密码！',  '安全提示', {  confirmButtonText: '确定',  cancelButtonText: '取消',  type: 'warning' }).then(() => {
-//                 router.push({ name: 'Profile', params: { activeTab: 'resetPwd' } })
-//               }).catch(() => {})
-//             }
-//             resolve(res)
-//           }).catch(error => {
-//             reject(error)
-//           })
-//         })
-//       },
-//       // 退出系统
-//       logOut() {
-//         return new Promise((resolve, reject) => {
-//           logout(this.token).then(() => {
-//             this.token = ''
-//             this.roles = []
-//             this.permissions = []
-//             removeToken()
-//             resolve()
-//           }).catch(error => {
-//             reject(error)
-//           })
-//         })
-//       }
-//     }
-//   })
+});
 
 export default useUserStore

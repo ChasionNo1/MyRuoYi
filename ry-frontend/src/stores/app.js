@@ -1,61 +1,73 @@
-// 定义后台管理系统应用状态存储模块
-import { defineStore } from "pinia"
+import { defineStore } from "pinia";
+import { ref, reactive, watch } from "vue";
 
-const useAppStore = defineStore('app', {
-    state: () => ({
-        sidebar: {
-            // 侧边栏是否打开（从 Cookie 读取，默认值：true）
-            // 这个是控制，打开和折叠成mini状态的
-            opened: true,
-            // 是否禁用动画（切换侧边栏时）
-            withoutAnimation: false,
-            // 是否隐藏侧边栏（常用于移动端或特殊布局）
-            // 这个是控制有和无的
-            hide: false,
-            // 侧边栏状态
-            status: 1
-        },
-        device: 'desktop',
-        size: 'default' // 由持久化插件自动读取
+export const useAppStore = defineStore("app", () => {
+  // 响应式状态定义
+  const sidebar = reactive({
+    opened: true,
+    withoutAnimation: false,
+    hide: false,
+    status: 1
+  });
 
-    }),
-    actions: {
-        // 切换侧边栏状态（移除 Cookie 操作）
-      toggleSideBar(withoutAnimation) {
-        if (this.sidebar.hide) return false;
-        this.sidebar.opened = !this.sidebar.opened;
-        this.sidebar.withoutAnimation = withoutAnimation;
-        if (this.sidebar.opened) {
-            this.sidebar.status = 1
-        }else {
-            this.sidebar.status = 0
-        }
-      },
+  const device = ref("desktop");
+  const size = ref("default");
 
-      // 关闭侧边栏（移除 Cookie 操作）
-      closeSideBar({ withoutAnimation }) {
-        this.sidebar.status = 0
-        this.sidebar.opened = false;
-        this.sidebar.withoutAnimation = withoutAnimation;
-      },
+  // 切换侧边栏状态
+  function toggleSideBar(withoutAnimation = false) {
+    if (sidebar.hide) return;
+    
+    sidebar.opened = !sidebar.opened;
+    sidebar.withoutAnimation = withoutAnimation;
+    sidebar.status = sidebar.opened ? 1 : 0;
+  }
 
-      // 切换设备类型
-      toggleDevice(device) {
-        this.device = device;
-      },
+  // 关闭侧边栏
+  function closeSideBar({ withoutAnimation = false } = {}) {
+    sidebar.opened = false;
+    sidebar.status = 0;
+    sidebar.withoutAnimation = withoutAnimation;
+  }
 
-      // 设置界面尺寸（移除 Cookie 操作）
-      setSize(size) {
-        this.size = size;
-      },
+  // 切换设备类型
+  function toggleDevice(newDevice) {
+    device.value = newDevice;
+  }
 
-      // 切换侧边栏隐藏状态
-      toggleSideBarHide(status) {
-        this.sidebar.hide = status;
-      }
-    }
+  // 设置界面尺寸
+  function setSize(newSize) {
+    size.value = newSize;
+  }
+
+  // 切换侧边栏隐藏状态
+  function toggleSideBarHide(status) {
+    sidebar.hide = status;
+  }
+
+  // 监听状态变化并自动保存（可选，适用于复杂场景）
+  watch(
+    [() => sidebar, device, size],
+    () => {
+      // 手动保存状态（如果使用插件则不需要）
+      // localStorage.setItem("app-store", JSON.stringify({ sidebar, device, size }));
+    },
+    { deep: true }
+  );
+
+  // 暴露状态和方法
+  return {
+    sidebar,
+    device,
+    size,
+    toggleSideBar,
+    closeSideBar,
+    toggleDevice,
+    setSize,
+    toggleSideBarHide
+  };
 }, {
-    persist: true
-})
+  // 持久化配置
+  persist:true
+});
 
-export default useAppStore
+export default useAppStore;
