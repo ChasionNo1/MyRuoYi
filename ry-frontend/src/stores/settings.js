@@ -39,7 +39,7 @@ const useSettingsStore = defineStore("settings", () => {
       fixedHeader: true,
       sidebarLogo: true,
       dynamicTitle: true,
-      isDark: true
+      isDarkState: true
     }) {
       // 通过动态属性名访问并修改 ref
       const refObj = {
@@ -52,7 +52,7 @@ const useSettingsStore = defineStore("settings", () => {
         fixedHeader,
         sidebarLogo,
         dynamicTitle,
-        isDark
+        isDarkState
       }[key];
       refObj.value = value;
     }

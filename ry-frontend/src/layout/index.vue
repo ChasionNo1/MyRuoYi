@@ -68,17 +68,14 @@ function setLayout() {
     <!-- 手机端的蒙层，当当前的设备是手机，并且侧边栏是打开状态，点击 -->
     <div v-if="device === 'mobile' && sidebar.opened" class="drawer-bg" @click="handleClickOutside"></div>
     <Sidebar v-if="!sidebar.hide" class="sidebar-container"></Sidebar>
-      <!-- <el-aside >
-        
-      </el-aside> -->
 <!-- 定义了两个动态加载的类，标签页导航和侧边栏隐藏 -->
-      <el-container :class="{ hasTagsView: needTagsView, sidebarHide: sidebar.hide }" class="main-container">
-        <el-header :class="{ 'fixed-header': fixedHeader }">
+      <div :class="{ hasTagsView: needTagsView, sidebarHide: sidebar.hide }" class="main-container">
+        <div :class="{ 'fixed-header': fixedHeader }">
           <NarBar @setLayout="setLayout"></NarBar>
-        </el-header>
-        <el-main class="basic-main"><AppMain></AppMain></el-main>
+        </div>
+        <AppMain class="basic-main"></AppMain>
         <settings ref="settingRef" />
-      </el-container>
+      </div>
   </div>
 </template>
 
