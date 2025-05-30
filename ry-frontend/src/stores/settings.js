@@ -25,7 +25,6 @@ const useSettingsStore = defineStore("settings", () => {
   const fixedHeader = ref(defaultSettings.fixedHeader);
   const sidebarLogo = ref(defaultSettings.sidebarLogo);
   const dynamicTitle = ref(defaultSettings.dynamicTitle);
-  const isDarkState = ref(isDark.value); // 重命名避免与 useDark 冲突
   // 修改布局设置（保持方法名不变）
   function changeSetting(data) {
     const { key, value } = data;
@@ -39,7 +38,6 @@ const useSettingsStore = defineStore("settings", () => {
       fixedHeader: true,
       sidebarLogo: true,
       dynamicTitle: true,
-      isDarkState: true
     }) {
       // 通过动态属性名访问并修改 ref
       const refObj = {
@@ -52,7 +50,6 @@ const useSettingsStore = defineStore("settings", () => {
         fixedHeader,
         sidebarLogo,
         dynamicTitle,
-        isDarkState
       }[key];
       refObj.value = value;
     }
@@ -66,7 +63,6 @@ const useSettingsStore = defineStore("settings", () => {
 
   // 切换暗黑模式（保持方法名不变）
   function toggleTheme() {
-    isDarkState.value = !isDark.value;
     toggleDark();
   }
 
@@ -81,7 +77,7 @@ const useSettingsStore = defineStore("settings", () => {
     fixedHeader,
     sidebarLogo,
     dynamicTitle,
-    isDarkState,
+    isDark,
     changeSetting,
     setTitle,
     toggleTheme

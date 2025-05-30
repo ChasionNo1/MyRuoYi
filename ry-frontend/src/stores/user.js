@@ -6,6 +6,7 @@ export const useUserStore = defineStore('user', () => {
   const token = ref('');
   const roles = ref([]);
   const permissions = ref([]);
+  const nickName = ref('chasion')
 
   // 注册方法
   async function register(params) {
@@ -60,6 +61,7 @@ export const useUserStore = defineStore('user', () => {
     token,
     roles,
     permissions,
+    nickName,
     register,
     login,
     getInfo,

@@ -2,8 +2,9 @@
   <div class="navbar">
     <!--is-active用来控制汉堡的方向的 @toggleClick="toggleSideBar"是父子组件通信 -->
     <hamburger id="hamburger-container" :is-active="appStore.sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
-    <!-- <breadcrumb v-if="!settingsStore.topNav" id="breadcrumb-container" class="breadcrumb-container" />
-    <top-nav v-if="settingsStore.topNav" id="topmenu-container" class="topmenu-container" /> -->
+    <!-- 设置面包屑导航，当top nav没有开启的时候显示 -->
+    <breadcrumb v-if="!settingsStore.topNav" id="breadcrumb-container" class="breadcrumb-container" />
+    <!-- <top-nav v-if="settingsStore.topNav" id="topmenu-container" class="topmenu-container" /> -->
 
     <div class="right-menu">
       <template v-if="appStore.device !== 'mobile'">
@@ -12,20 +13,21 @@
 
         <!-- 全屏功能，调用vueuse/core -->
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
-
-        <el-tooltip content="主题模式" effect="dark" placement="bottom">
+        <!-- tooltip文字提示 effect提示框的背景颜色 -->
+        <el-tooltip content="主题模式" effect="light" placement="bottom">
           <div class="right-menu-item hover-effect theme-switch-wrapper" @click="toggleTheme">
-            <svg-icon v-if="settingsStore.isDarkState" icon-class="sunny" />
-            <svg-icon v-if="!settingsStore.isDarkState" icon-class="moon" />
+            <svg-icon v-if="settingsStore.isDark" icon-class="sunny" />
+            <svg-icon v-if="!settingsStore.isDark" icon-class="moon" />
           </div>
         </el-tooltip>
-
+<!-- 这里改变element-ui组件的大小，配置不全未生效 -->
         <el-tooltip content="布局大小" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
       </template>
-
+<!-- 下拉菜单 -->
       <el-dropdown @command="handleCommand" class="avatar-container right-menu-item hover-effect" trigger="hover">
+        <!-- 头像和用户名 -->
         <div class="avatar-wrapper">
           <img :src="userStore.avatar" class="user-avatar" />
           <span class="user-nickname"> {{ userStore.nickName }} </span>
@@ -41,6 +43,7 @@
           </el-dropdown-menu>
         </template>
       </el-dropdown>
+      <!-- 设置页布局，当开启显示设置时此元素可见，点击时调用设置布局 -->
       <div class="right-menu-item hover-effect setting" @click="setLayout" v-if="settingsStore.showSettings">
         <svg-icon icon-class="more-up" />
       </div>
@@ -50,11 +53,11 @@
 
 <script setup>
 import { ElMessageBox } from 'element-plus'
-// import Breadcrumb from '@/components/Breadcrumb'
+import Breadcrumb from '@/components/Breadcrumb'
 // import TopNav from '@/components/TopNav'
 import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
-// import SizeSelect from '@/components/SizeSelect'
+import SizeSelect from '@/components/SizeSelect'
 // import HeaderSearch from '@/components/HeaderSearch'
 import useAppStore from '@/stores/app'
 import useUserStore from '@/stores/user'
@@ -95,6 +98,7 @@ function logout() {
 }
 
 // 向父组件发送修改请求
+// 设置布局，发送到index布局里
 const emits = defineEmits(['setLayout'])
 function setLayout() {
   emits('setLayout')

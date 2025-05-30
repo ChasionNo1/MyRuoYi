@@ -53,11 +53,13 @@ watchEffect(() => {
   }
 })
 
+// 在navbar里点击图标打开设置，那里发送点击打开请求，这里响应处理
 const settingRef = ref(null)
 // 这段代码实现了一个跨组件调用方法的功能，
 // 让父组件可以直接触发子组件 <Settings> 的 openSetting() 方法
   // 可以改成状态管理
 function setLayout() {
+  // ref引用，调用方法，打开设置
   settingRef.value.openSetting()
 }
 </script>
@@ -67,7 +69,7 @@ function setLayout() {
   <div class="app-wrapper" :class="classObj" :style="{'--current-color': theme}">
     <!-- 手机端的蒙层，当当前的设备是手机，并且侧边栏是打开状态，点击 -->
     <div v-if="device === 'mobile' && sidebar.opened" class="drawer-bg" @click="handleClickOutside"></div>
-    <sidebar v-if="!sidebar.hide" class="sidebar-container"></sidebar>
+    <Sidebar v-if="!sidebar.hide" class="sidebar-container"></Sidebar>
 <!-- 定义了两个动态加载的类，标签页导航和侧边栏隐藏 -->
       <div :class="{ hasTagsView: needTagsView, sidebarHide: sidebar.hide }" class="main-container">
         <div :class="{ 'fixed-header': fixedHeader }">

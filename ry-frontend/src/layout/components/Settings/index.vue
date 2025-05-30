@@ -28,6 +28,7 @@
     <div class="drawer-item">
       <span>主题颜色</span>
       <span class="comp-style">
+        <!-- 颜色选择器 -->
         <el-color-picker v-model="theme" :predefine="predefineColors" @change="themeChange"/>
       </span>
     </div>
@@ -97,9 +98,12 @@ const predefineColors = ref(["#409EFF", "#ff4500", "#ff8c00", "#ffd700", "#90ee9
 
 /** 是否需要topnav */
 function topNavChange(val) {
-  if (!val) {
+  if (val) {
+     appStore.toggleSideBarHide(true)
+    //  permissionStore.setSidebarRouters(permissionStore.defaultRoutes)
+  }else {
+    // 如果当前是false，关闭top nav，设置侧边栏不隐藏，hide为false
     appStore.toggleSideBarHide(false)
-    permissionStore.setSidebarRouters(permissionStore.defaultRoutes)
   }
 }
 

@@ -1,8 +1,12 @@
 <template>
   <el-breadcrumb class="app-breadcrumb" separator="/">
+    <!-- transition-group实现路由项的过渡动画，name属性用于自动生成CSS类名 -->
     <transition-group name="breadcrumb">
+      <!-- 循环渲染面包屑层级列表，使用item.path作为唯一key -->
       <el-breadcrumb-item v-for="(item, index) in levelList" :key="item.path">
+        <!-- 条件渲染：当路由redirect为noRedirect或当前项为最后一个时，显示为不可点击的span -->
         <span v-if="item.redirect === 'noRedirect' || index == levelList.length - 1" class="no-redirect">{{ item.meta.title }}</span>
+         <!-- 否则显示为可点击的链接，prevent修饰符阻止默认跳转行为 -->
         <a v-else @click.prevent="handleLink(item)">{{ item.meta.title }}</a>
       </el-breadcrumb-item>
     </transition-group>
@@ -12,7 +16,7 @@
 <script setup>
 import usePermissionStore from '@/stores/permission'
 import {useRoute, useRouter} from 'vue-router'
-import {ref} from 'vue'
+import {ref, watchEffect} from 'vue'
 const route = useRoute()
 const router = useRouter()
 const permissionStore = usePermissionStore()
