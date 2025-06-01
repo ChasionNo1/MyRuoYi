@@ -100,10 +100,11 @@ const predefineColors = ref(["#409EFF", "#ff4500", "#ff8c00", "#ffd700", "#90ee9
 function topNavChange(val) {
   if (val) {
      appStore.toggleSideBarHide(true)
-    //  permissionStore.setSidebarRouters(permissionStore.defaultRoutes)
+     permissionStore.setSidebarRouters(permissionStore.defaultRoutes)
   }else {
     // 如果当前是false，关闭top nav，设置侧边栏不隐藏，hide为false
     appStore.toggleSideBarHide(false)
+    permissionStore.setSidebarRouters(permissionStore.defaultRoutes)
   }
 }
 

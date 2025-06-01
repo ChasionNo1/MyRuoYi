@@ -4,7 +4,8 @@
     <hamburger id="hamburger-container" :is-active="appStore.sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
     <!-- 设置面包屑导航，当top nav没有开启的时候显示 -->
     <breadcrumb v-if="!settingsStore.topNav" id="breadcrumb-container" class="breadcrumb-container" />
-    <!-- <top-nav v-if="settingsStore.topNav" id="topmenu-container" class="topmenu-container" /> -->
+    <!-- 顶部导航栏，当设置开启顶部导航栏时 -->
+    <top-nav v-if="settingsStore.topNav" id="topmenu-container" class="topmenu-container" />
 
     <div class="right-menu">
       <template v-if="appStore.device !== 'mobile'">
@@ -54,7 +55,7 @@
 <script setup>
 import { ElMessageBox } from 'element-plus'
 import Breadcrumb from '@/components/Breadcrumb'
-// import TopNav from '@/components/TopNav'
+import TopNav from '@/components/TopNav'
 import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'

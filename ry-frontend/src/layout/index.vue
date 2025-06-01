@@ -4,6 +4,7 @@ import Sidebar from './components/Sidebar/index.vue'
 import NarBar from './components/Navbar.vue'
 import AppMain from './components/AppMain.vue'
 import Settings from './components/Settings'
+// import { TagsView } from './components'
 import {ref, computed} from 'vue'
 import useSettingsStore from '@/stores/settings.js'
 import useAppStore from '@/stores/app'
@@ -74,6 +75,7 @@ function setLayout() {
       <div :class="{ hasTagsView: needTagsView, sidebarHide: sidebar.hide }" class="main-container">
         <div :class="{ 'fixed-header': fixedHeader }">
           <NarBar @setLayout="setLayout"></NarBar>
+          <!-- <tags-view v-if="needTagsView" /> -->
         </div>
         <AppMain class="basic-main"></AppMain>
         <settings ref="settingRef" />
