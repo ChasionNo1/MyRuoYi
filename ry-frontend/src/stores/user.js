@@ -69,7 +69,7 @@ export const useUserStore = defineStore('user', () => {
     hasAdminRole
   };
 }, {
-  persist: true
+  persist: false
 });
 
 export default useUserStore

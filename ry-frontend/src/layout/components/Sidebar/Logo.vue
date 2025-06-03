@@ -35,7 +35,7 @@ defineProps({
 })
 
 // const title = 
-const title = ref('若依管理系统')
+const title = ref('学习版')
 const settingsStore = useSettingsStore()
 // 设置侧边栏的主体，控制颜色
 const sideTheme = computed(() => settingsStore.sideTheme)
