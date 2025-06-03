@@ -94,10 +94,15 @@ watch(route, () => {
   moveToCurrentTag()
 })
 
+// 监听可见性，
+// 通过在 document.body 上监听点击事件，可捕获页面任意位置的点击。
+// 当用户点击菜单外部区域时，触发 closeMenu 关闭菜单。
 watch(visible, (value) => {
   if (value) {
+    // 当 visible 变为 true（菜单显示）时，在 document.body 上添加点击事件监听器 closeMenu。
     document.body.addEventListener('click', closeMenu)
   } else {
+    // 当 visible 变为 false（菜单隐藏）时，移除该监听器，避免内存泄漏。
     document.body.removeEventListener('click', closeMenu)
   }
 })
@@ -138,7 +143,7 @@ function isLastView() {
     return false
   }
 }
-
+// 从路由配置中递归筛选出所有需要固定显示在标签页（通常是多标签页导航系统）中的路由项
 function filterAffixTags(routes, basePath = '') {
   let tags = []
   routes.forEach(route => {
@@ -152,6 +157,7 @@ function filterAffixTags(routes, basePath = '') {
       })
     }
     if (route.children) {
+      // 递归过滤固定tags
       const tempTags = filterAffixTags(route.children, route.path)
       if (tempTags.length >= 1) {
         tags = [...tags, ...tempTags]
@@ -161,7 +167,10 @@ function filterAffixTags(routes, basePath = '') {
   return tags
 }
 
+// 初始化tags
+// 先添加要固定显示的tags（必须要有name）
 function initTags() {
+  // 得到固定tags
   const res = filterAffixTags(routes.value)
   affixTags.value = res
   for (const tag of res) {
@@ -203,13 +212,18 @@ function moveToCurrentTag() {
 
 function refreshSelectedTag(view) {
   proxy.$tab.refreshPage(view)
+  // 标记该路由是否为 iframe 视图（link 通常存储 iframe 的 src 地址）。
   if (route.meta.link) {
+    // 从标签页管理状态中删除 iframe 视图的缓存，确保刷新后重新加载 iframe。
     useTagsViewStore().delIframeView(route)
   }
 }
-
+// view -> tag
 function closeSelectedTag(view) {
+  // $tab 插件 通常是基于 Vue Router 封装的标签页管理器，提供如 openPage、closePage、refreshPage 等方法。
+  // closePage(view) 方法用于关闭指定的标签页 view，通常会返回一个 Promise，包含操作结果和最新的标签页列表 visitedViews。
   proxy.$tab.closePage(view).then(({ visitedViews }) => {
+    // 判断被关闭的是否为当前激活标签页，若是则跳转至最后一个有效标签页
     if (isActive(view)) {
       toLastView(visitedViews, view)
     }
@@ -217,8 +231,11 @@ function closeSelectedTag(view) {
 }
 
 function closeRightTags() {
+  // 在src/plugins/tab.js 调用store下的删除方法
   proxy.$tab.closeRightPage(selectedTag.value).then(visitedViews => {
+    // 如果当前是激活项，
     if (!visitedViews.find(i => i.fullPath === route.fullPath)) {
+      // 跳转到最后一个
       toLastView(visitedViews)
     }
   })
@@ -247,31 +264,41 @@ function closeAllTags(view) {
     toLastView(visitedViews, view)
   })
 }
-
+// 跳转到最后一个view
+// 用于导航到最后一个有效标签页的函数 toLastView，其核心逻辑是在关闭当前标签页后，根据剩余标签页的情况决定跳转到哪个页面
 function toLastView(visitedViews, view) {
+  // visitedViews.slice(-1) 返回数组的最后一个元素（即最近访问的标签页）。
   const latestView = visitedViews.slice(-1)[0]
+  // 存在则跳转到最后一个标签页
   if (latestView) {
     router.push(latestView.fullPath)
   } else {
     // now the default is to redirect to the home page if there is no tags-view,
     // you can adjust it according to your needs.
+    // 刷新首页
     if (view.name === 'Dashboard') {
       // to reload home page
       router.replace({ path: '/redirect' + view.fullPath })
     } else {
+      // 跳转到根路径（通常是首页）
       router.push('/')
     }
   }
 }
-
+// 邮件打开菜单 根据鼠标点击位置计算菜单的显示位置，并确保菜单不会超出容器边界
 function openMenu(tag, e) {
   const menuMinWidth = 105
+  // 容器左边界相对于视口的位置
   const offsetLeft = proxy.$el.getBoundingClientRect().left // container margin left
   const offsetWidth = proxy.$el.offsetWidth // container width
+  // 菜单最大左偏移量（防止菜单超出容器右边界）
   const maxLeft = offsetWidth - menuMinWidth // left boundary
+// 菜单的初始左偏移量=鼠标点击的x坐标-容器的坐标+15
   const l = e.clientX - offsetLeft + 15 // 15: margin right
 
+  // 如果超过了最大的左偏移量
   if (l > maxLeft) {
+    // 就最大的左偏移量作为菜单的left值
     left.value = maxLeft
   } else {
     left.value = l
@@ -279,6 +306,7 @@ function openMenu(tag, e) {
 
   top.value = e.clientY
   visible.value = true
+  // 选中tag
   selectedTag.value = tag
 }
 

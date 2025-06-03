@@ -28,9 +28,14 @@ onBeforeUnmount(() => {
   scrollWrapper.value.removeEventListener('scroll', emitScroll)
 })
 
+// 在标签页组件中实现横向滚动导航
 function handleScroll(e) {
+  // e.wheelDelta：旧版浏览器（如 IE）使用的滚轮事件属性，值为正数表示向上滚动，负数表示向下滚动。
+// -e.deltaY * 40：现代浏览器（如 Chrome、Firefox）使用的标准属性 deltaY，值为正数表示向下滚动，负数表示向上滚动，乘以 40 是为了统一不同浏览器的滚动灵敏度
   const eventDelta = e.wheelDelta || -e.deltaY * 40
   const $scrollWrapper = scrollWrapper.value
+  // scrollLeft：设置或获取元素内容水平滚动的像素值。
+// eventDelta / 4：将滚轮事件的滚动量除以 4，目的是降低滚动速度，使滚动更平滑。
   $scrollWrapper.scrollLeft = $scrollWrapper.scrollLeft + eventDelta / 4
 }
 
