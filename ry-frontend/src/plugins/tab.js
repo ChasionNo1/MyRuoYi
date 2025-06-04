@@ -3,7 +3,7 @@ import router from '@/router'
 
 export default {
   // 刷新当前tab页签
-  refreshPage(obj) {
+  async refreshPage(obj) {
     // 从 Vue Router 的当前路由中解构出三个属性：
     // path：当前路由路径
     // query：URL 查询参数对象
@@ -35,13 +35,12 @@ export default {
   //     调用标签页管理 store 的 delCachedView 方法：
       // 清除指定组件的缓存（用于 keep-alive）
       // 返回 Promise 对象
-        return useTagsViewStore().delCachedView(obj).then(() => {
-      const { path, query } = obj
-      // 刷新操作
-      router.replace({
-        path: '/redirect' + path,
-        query: query
-      })
+        await useTagsViewStore().delCachedView(obj)
+    const { path: path_1, query: query_1 } = obj
+    // 刷新操作
+    router.replace({
+      path: '/redirect' + path_1,
+      query: query_1
     })
   },
   // 关闭当前tab页签，打开新页签
@@ -52,15 +51,14 @@ export default {
     }
   },
   // 关闭指定tab页签
-  closePage(obj) {
+  async closePage(obj) {
     if (obj === undefined) {
-      return useTagsViewStore().delView(router.currentRoute.value).then(({ visitedViews }) => {
-        const latestView = visitedViews.slice(-1)[0]
-        if (latestView) {
-          return router.push(latestView.fullPath)
-        }
-        return router.push('/')
-      })
+      const { visitedViews } = await useTagsViewStore().delView(router.currentRoute.value)
+      const latestView = visitedViews.slice(-1)[0]
+      if (latestView) {
+        return router.push(latestView.fullPath)
+      }
+      return await router.push('/')
     }
     return useTagsViewStore().delView(obj)
   },

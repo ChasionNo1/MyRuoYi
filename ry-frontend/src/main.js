@@ -17,6 +17,8 @@ import piniaPluginPersist from 'pinia-plugin-persistedstate';
 
 import './permission' // 权限控制
 import '@/assets/styles/index.scss' // 全局样式
+// 注册指令
+import plugins from './plugins' // plugins
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -27,6 +29,7 @@ pinia.use(piniaPluginPersist);
 // 挂载 Pinia 和路由（确保顺序正确）
 app.use(pinia)
 app.use(router)
+app.use(plugins)
 
 // 导入 Pinia Store
 import { useAppStore } from './stores/app' // 假设 Store 文件路径为 src/stores/app.js

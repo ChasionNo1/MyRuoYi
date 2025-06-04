@@ -59,7 +59,7 @@ router.beforeEach(async (to, from, next) => {
                     // 隐藏重新登录提示
                     isRelogin.show = false
                     // 调用权限状态管理中的 generateRoutes 方法生成可访问的路由表
-                    const routeResult = permissionStore.generateRoutes()
+                    const routeResult = await permissionStore.generateRoutes()
                     // 遍历可访问的路由表
                     routeResult.forEach(route => {
                         // 如果路由路径不是 http 协议的

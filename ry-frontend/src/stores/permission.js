@@ -53,6 +53,7 @@ export const usePermissionStore = defineStore('permission', () => {
         // 3. 过滤并转换路由组件
         const sidebarRoutes = filterAsyncRouter(sdata);
         const rewriteRoutes = filterAsyncRouter(rdata, false, true);
+        console.log('rewrite', rewriteRoutes)
         const defaultRoutes = filterAsyncRouter(defaultData);
 
         // 4. 过滤本地定义的动态路由（基于角色/权限）
@@ -70,6 +71,7 @@ export const usePermissionStore = defineStore('permission', () => {
         setTopbarRoutes(defaultRoutes);
 
         resolve(rewriteRoutes);
+        console.log('routes', routes.value)
       });
     });
   }
@@ -110,8 +112,7 @@ function filterAsyncRouter(asyncRouterMap, lastRouter = false, type = false) {
       } else if (route.component === 'InnerLink') {
         route.component = InnerLink
       } else {
-        route.component = () => import("/src/views/system/user/index.vue")
-        // route.component = loadView(route.component)
+        route.component = loadView(route.component)
       }
     }
 
@@ -162,23 +163,14 @@ export function filterDynamicRoutes(routes) {
 }
 
 export const loadView = (view) => {
-  let res;
-  console.log('modules', modules);
+  let res
   for (const path in modules) {
-    const dir = path.split('views/')[1].split('.vue')[0];
-    console.log('Checking dir:', dir, 'against view:', view);
+    const dir = path.split('views/')[1].split('.vue')[0]
     if (dir === view) {
-      console.log('Found match:', path);
-      res = () => {
-        return modules[path]().catch((error) => {
-          console.error('Failed to load component:', error);
-          throw error;
-        });
-      };
+      res = () => modules[path]()
     }
   }
-  console.log('res:', res);
-  return res;
-};
+  return res
+}
 
 export default usePermissionStore
