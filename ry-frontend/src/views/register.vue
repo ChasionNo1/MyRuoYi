@@ -16,6 +16,7 @@ const registerFormStatus = ref({
   username: "",
   password: "",
   confirmPassword: "",
+  email: "",
   code: "",
   uuid: ""
 })
@@ -26,6 +27,15 @@ const equalToPassword = (rule, value, callback) => {
     callback()
   }
 }
+// 邮箱校验规则
+const validateEmail = (rule, value, callback) => {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!emailRegex.test(value)) {
+    callback(new Error('请输入有效的邮箱地址'));
+  } else {
+    callback();
+  }
+};
 
 const registerRules = {
   username: [
@@ -41,7 +51,48 @@ const registerRules = {
     { required: true, trigger: "blur", message: "请再次输入您的密码" },
     { required: true, validator: equalToPassword, trigger: "blur" }
   ],
-  code: [{ required: true, trigger: "change", message: "请输入验证码" }]
+  code: [{ required: true, trigger: "change", message: "请输入验证码" }],
+  email: [
+    { required: true, trigger: "blur", message: "请输入您的邮箱" },
+    { validator: validateEmail, trigger: "blur" }
+  ]
+}
+
+/**
+ * 发送邮箱验证码
+ * 
+ */
+const sendFlag = ref(false)
+const countdown = ref(0)
+const sendMailCode = async() => {
+  try {
+    // 先对邮箱进行校验
+    const values = await registerRef.value.validateField('email')
+    const params = {
+      email: values.email
+    }
+    // 发送请求
+    const result = await userStore.sendEmailApi(params)
+    if (result.code === 200) {
+       ElMessage.success("发送成功，请到邮箱查看")
+       // 赋值uuid
+       registerFormStatus.value.uuid = result.data
+       // 按钮倒计时
+       sendFlag.value = true
+       countdown.value = 60
+       const timer = setInterval(() => {
+          countdown.value--
+          if (countdown.value <=0 ){
+            clearInterval(timer)
+            sendFlag.value = false
+          }
+       }, 1000);
+    }else {
+      ElMessage.error('发送失败')
+    }
+  }catch (error) {
+    console.log(error)
+  }
 }
 
 /**
@@ -109,7 +160,20 @@ const handleRegister = async () => {
           <template #prefix><svg-icon icon-class="password" class="el-input__icon input-icon" /></template>
         </el-input>
       </el-form-item>
-      <el-form-item prop="code" v-if="captchaEnabled">
+      <!-- 邮箱 -->
+      <el-form-item prop="email">
+        <el-input
+        v-model="registerFormStatus.email" 
+        type="email"
+        size="large"
+        auto-complete="off"
+        placeholder="输入邮箱"
+        >
+        <template #prefix><svg-icon icon-class="email" class="el-input__icon input-icon"></svg-icon></template>
+        </el-input>
+      </el-form-item>
+      <!-- 邮箱验证码 -->
+      <el-form-item prop="code">
         <el-input
           size="large" 
           v-model="registerFormStatus.code"
@@ -120,10 +184,9 @@ const handleRegister = async () => {
         >
           <template #prefix><svg-icon icon-class="validCode" class="el-input__icon input-icon" /></template>
         </el-input>
-        <div class="register-code">
-          <img :src="codeUrl" @click="getCode" class="register-code-img"/>
-        </div>
+       <el-button size="large" :disable="!sendFlag" class="send-email-btn" @click="sendMailCode">{{ sendFlag ? `重新发送(${countdown})` : "发送验证码" }}</el-button>
       </el-form-item>
+
       <el-form-item style="width:100%;">
         <el-button
           :loading="loading"
@@ -196,6 +259,10 @@ const handleRegister = async () => {
 .register-code-img {
   height: 40px;
   padding-left: 12px;
+}
+.send-email-btn {
+  margin-left: 3%;
+  border-width: 2px;
 }
 
 </style>

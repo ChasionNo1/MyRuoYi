@@ -1,12 +1,22 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { login as loginApi, getInfo as getInfoApi, register as registerApi } from '@/api/login';
+import { getAction } from '@/api/manage';
 
 export const useUserStore = defineStore('user', () => {
   const token = ref('');
   const roles = ref([]);
   const permissions = ref([]);
   const nickName = ref('chasion')
+  // 发送邮箱验证码
+  async function sendEmailApi(params) {
+    try {
+      const result = await getAction('/auth/verify/email', params)
+      return result
+    }catch (error) {
+      throw new Error(error)
+    }
+  }
 
   // 注册方法
   async function register(params) {
@@ -66,10 +76,11 @@ export const useUserStore = defineStore('user', () => {
     login,
     getInfo,
     logout,
-    hasAdminRole
+    hasAdminRole,
+    sendEmailApi
   };
 }, {
-  persist: false
+  persist: true
 });
 
 export default useUserStore
