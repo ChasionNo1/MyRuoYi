@@ -13,6 +13,7 @@ public class Result<T> {
     private String message;
     private T data;
 
+
     //快速返回操作成功响应结果(带响应数据)
     public static <E> Result<E> success(String message, E data) {
         return new Result<>(ResultCode.SUCCESS.getCode(), message, data);

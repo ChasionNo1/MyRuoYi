@@ -1,5 +1,6 @@
 package com.chasion.rybackend.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.chasion.rybackend.entities.SysMenu;
 import com.chasion.rybackend.entities.vo.RouterVo;
 import org.springframework.stereotype.Service;
@@ -8,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 
-public interface ISysMenuService {
+public interface ISysMenuService extends IService<SysMenu> {
 
     /**
      * 根据用户查询系统菜单列表

@@ -6,7 +6,8 @@ public enum ResultCode {
     UNAUTHORIZED(401, "未授权"),
     FORBIDDEN(403, "禁止访问"),
     NOT_FOUND(404, "资源不存在"),
-    INTERNAL_ERROR(500, "服务器内部错误");
+    INTERNAL_ERROR(500, "服务器内部错误"),
+    T00_MANY_REQUEST(429, "请求过于频繁，请稍后再试");
 
     private final Integer code;
     private final String message;

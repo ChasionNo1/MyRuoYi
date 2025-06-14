@@ -1,11 +1,6 @@
 package com.chasion.rybackend.utils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.chasion.rybackend.commons.Constants;
 import org.springframework.util.AntPathMatcher;
@@ -717,6 +712,20 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils
             {
                 sb.append(c);
             }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 随机数
+     * @param place 定义随机数的位数
+     */
+    public static String randomGen(int place) {
+        String base = "qwertyuioplkjhgfdsazxcvbnmQAZWSXEDCRFVTGBYHNUJMIKLOP0123456789";
+        StringBuffer sb = new StringBuffer();
+        Random rd = new Random();
+        for(int i=0;i<place;i++) {
+            sb.append(base.charAt(rd.nextInt(base.length())));
         }
         return sb.toString();
     }

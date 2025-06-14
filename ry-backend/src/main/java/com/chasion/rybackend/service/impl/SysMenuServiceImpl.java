@@ -1,5 +1,7 @@
 package com.chasion.rybackend.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.chasion.rybackend.commons.Constants;
 import com.chasion.rybackend.commons.UserConstants;
 import com.chasion.rybackend.entities.SysMenu;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -420,4 +423,53 @@ public class SysMenuServiceImpl implements ISysMenuService {
     }
 
 
+    @Override
+    public boolean saveBatch(Collection<SysMenu> entityList, int batchSize) {
+        return false;
+    }
+
+    @Override
+    public boolean saveOrUpdateBatch(Collection<SysMenu> entityList, int batchSize) {
+        return false;
+    }
+
+    @Override
+    public boolean updateBatchById(Collection<SysMenu> entityList, int batchSize) {
+        return false;
+    }
+
+    @Override
+    public boolean saveOrUpdate(SysMenu entity) {
+        return false;
+    }
+
+    @Override
+    public SysMenu getOne(Wrapper<SysMenu> queryWrapper, boolean throwEx) {
+        return null;
+    }
+
+    @Override
+    public Optional<SysMenu> getOneOpt(Wrapper<SysMenu> queryWrapper, boolean throwEx) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Map<String, Object> getMap(Wrapper<SysMenu> queryWrapper) {
+        return Map.of();
+    }
+
+    @Override
+    public <V> V getObj(Wrapper<SysMenu> queryWrapper, Function<? super Object, V> mapper) {
+        return null;
+    }
+
+    @Override
+    public BaseMapper<SysMenu> getBaseMapper() {
+        return null;
+    }
+
+    @Override
+    public Class<SysMenu> getEntityClass() {
+        return null;
+    }
 }

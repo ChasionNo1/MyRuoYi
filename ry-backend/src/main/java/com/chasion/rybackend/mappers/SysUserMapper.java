@@ -1,11 +1,12 @@
 package com.chasion.rybackend.mappers;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.chasion.rybackend.entities.SysUser;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 @Mapper
-public interface SysUserMapper {
+public interface SysUserMapper extends BaseMapper<SysUser> {
     /**
      * 新增用户信息
      *
@@ -19,4 +20,7 @@ public interface SysUserMapper {
 
     @Select("select * from sys_user where user_id=#{userId}")
     SysUser selectUserByUserId(Long id);
+
+    @Select("select * from sys_user where email=#{email}")
+    SysUser selectUserByEmail(String email);
 }

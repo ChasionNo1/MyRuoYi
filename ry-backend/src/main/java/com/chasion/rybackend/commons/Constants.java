@@ -170,4 +170,10 @@ public class Constants
      */
     public static final String[] JOB_ERROR_STR = { "java.net.URL", "javax.naming.InitialContext", "org.yaml.snakeyaml",
             "org.springframework", "org.apache", "com.ruoyi.common.utils.file", "com.ruoyi.framework.config", "com.ruoyi.project.tool" };
+
+    public static final String USER_STATUS_0 = "0";
+    public static final String USER_STATUS_1 = "1";
+
+    public static final String USER_DEL_FLAG_0 = "0";
+    public static final String USER_DEL_FLAG_1 = "1";
 }

@@ -1,0 +1,73 @@
+# WEB 服务器配置
+server:
+  port: 8080
+
+# MySQL 数据库配置
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/ruoyi?characterEncoding=utf-8&useSSL=false&serverTimezone=Hongkong&allowPublicKeyRetrieval=true
+    username: root
+    password: cr199725..
+    hikari:
+      maximum-pool-size: 15
+      minimum-idle: 5
+      idle-timeout: 30000
+
+  # Redis 配置
+  data:
+    redis:
+      database: 11
+      host: localhost
+      port: 6379
+      password: cc199725..
+      timeout: 1800000
+
+  # 邮件配置
+  mail:
+    host: smtp.163.com
+    port: 465
+    username: chasion182@163.com
+    password: 185897780..
+    protocol: smtps
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+
+  # swagger配置
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+# MyBatis 配置
+mybatis:
+  mapper-locations: classpath:mappers/*.xml
+  type-aliases-package: com.chasion.rybackend.entities
+  configuration:
+    use-generated-keys: true
+    map-underscore-to-camel-case: true
+
+mybatis-plus:
+  mapper-locations: classpath:mappers/*.xml
+  type-aliases-package: com.chasion.rybackend.entities
+  global-config:
+    # 关闭MP3.0自带的banner
+    banner: false
+    db-config:
+      #主键类型  0:"数据库ID自增",1:"该类型为未设置主键类型", 2:"用户输入ID",3:"全局唯一ID (数字类型唯一ID)", 4:"全局唯一ID UUID",5:"字符串全局唯一ID (idWorker 的字符串表示)";
+      id-type: ASSIGN_UUID
+      # 默认数据库表下划线命名
+      table-underline: true
+      logic-delete-field: delFlag
+      logic-delete-value: 'null'
+      logic-not-delete-value: 0
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    jdbc-type-for-null: 'null'
+    call-setters-on-nulls: true
+    local-cache-scope: statement
+
+
