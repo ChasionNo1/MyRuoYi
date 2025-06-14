@@ -62,14 +62,14 @@ const registerRules = {
  * 发送邮箱验证码
  * 
  */
-const sendFlag = ref(false)
+const btnAvailable = ref(true)
 const countdown = ref(0)
 const sendMailCode = async() => {
   try {
     // 先对邮箱进行校验
-    const values = await registerRef.value.validateField('email')
+    await registerRef.value.validateField('email')
     const params = {
-      email: values.email
+      email: registerFormStatus.value.email
     }
     // 发送请求
     const result = await userStore.sendEmailApi(params)
@@ -78,13 +78,13 @@ const sendMailCode = async() => {
        // 赋值uuid
        registerFormStatus.value.uuid = result.data
        // 按钮倒计时
-       sendFlag.value = true
+       btnAvailable.value = false
        countdown.value = 60
        const timer = setInterval(() => {
           countdown.value--
           if (countdown.value <=0 ){
             clearInterval(timer)
-            sendFlag.value = false
+            btnAvailable.value = true
           }
        }, 1000);
     }else {
@@ -105,7 +105,10 @@ const handleRegister = async () => {
     // 校验通过，发送请求
     const value = {
       username: registerFormStatus.value.username,
-      password: registerFormStatus.value.password
+      password: registerFormStatus.value.password,
+      email: registerFormStatus.value.email,
+      code: registerFormStatus.value.code,
+      uuid: registerFormStatus.value.uuid
     }
     const result = await userStore.register(value)
     console.log(result)
@@ -184,7 +187,7 @@ const handleRegister = async () => {
         >
           <template #prefix><svg-icon icon-class="validCode" class="el-input__icon input-icon" /></template>
         </el-input>
-       <el-button size="large" :disable="!sendFlag" class="send-email-btn" @click="sendMailCode">{{ sendFlag ? `重新发送(${countdown})` : "发送验证码" }}</el-button>
+       <el-button size="large" :disabled="!btnAvailable" class="send-email-btn" @click="sendMailCode">{{ btnAvailable ?"发送验证码": `${countdown}`}}</el-button>
       </el-form-item>
 
       <el-form-item style="width:100%;">
@@ -262,7 +265,8 @@ const handleRegister = async () => {
 }
 .send-email-btn {
   margin-left: 3%;
-  border-width: 2px;
+  border-width: 1.5px;
+  width: 30%;
 }
 
 </style>

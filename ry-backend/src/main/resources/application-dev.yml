@@ -15,13 +15,12 @@ spring:
       idle-timeout: 30000
 
   # Redis 配置
-  data:
-    redis:
-      database: 11
-      host: localhost
-      port: 6379
-      password: cc199725..
-      timeout: 1800000
+  redis:
+    host: localhost
+    password: cc199725..
+    database: 11
+    port: 6379
+    timeout: 1800000
 
   # 邮件配置
   mail:
