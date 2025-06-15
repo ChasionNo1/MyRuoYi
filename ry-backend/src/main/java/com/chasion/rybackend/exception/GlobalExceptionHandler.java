@@ -49,7 +49,7 @@ public class GlobalExceptionHandler {
                 .stream()
                 .map(FieldError::getDefaultMessage)
                 .collect(Collectors.joining(", "));
-        log.warn("参数校验失败: {}", errorMsg);
+        log.error("参数校验失败: {}", errorMsg);
         return Result.error(400, errorMsg);
     }
     /** 

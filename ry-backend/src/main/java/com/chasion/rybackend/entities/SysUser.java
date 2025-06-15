@@ -1,5 +1,6 @@
 package com.chasion.rybackend.entities;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,8 +21,10 @@ public class SysUser extends BaseEntity{
 
     private Long deptId;
 
+    @TableField("user_name")
     private String username;
 
+    @TableField("nick_name")
     private String nickname;
 
     private String email;

@@ -24,7 +24,9 @@ public interface ISysUserService extends IService<SysUser> {
     SysUser getUserByEmail(String email);
 
     // 登录
-    public String loginUser(String username, String password);
+    public String login(String username, String password);
 
     SysUser getUserByUserId(Long userId);
+
+    Result checkUserIsEffective(SysUser user);
 }

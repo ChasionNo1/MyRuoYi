@@ -4,11 +4,9 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.chasion.rybackend.aspectj.lang.annotation.RateLimiter;
 import com.chasion.rybackend.entities.SysUser;
-import com.chasion.rybackend.exception.BusinessException;
 import com.chasion.rybackend.resp.Result;
 import com.chasion.rybackend.resp.ResultCode;
 import com.chasion.rybackend.service.ISysUserService;
-import com.chasion.rybackend.service.SysRegisterService;
 import com.chasion.rybackend.utils.MailClient;
 import com.chasion.rybackend.utils.RedisKeyUtil;
 import com.chasion.rybackend.utils.StringUtils;
@@ -26,6 +24,7 @@ import java.util.concurrent.TimeUnit;
  * */
 @RestController
 @Tag(name = "注册接口", description = "注册相关操作")
+@RequestMapping("/sys")
 public class SysRegisterController extends BaseController{
     @Autowired
     private ISysUserService userService;

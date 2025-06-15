@@ -176,4 +176,9 @@ public class Constants
 
     public static final String USER_DEL_FLAG_0 = "0";
     public static final String USER_DEL_FLAG_1 = "1";
+
+    /**
+     * 系统日志类型： 登录
+     */
+    public static final int LOG_TYPE_1 = 1;
 }

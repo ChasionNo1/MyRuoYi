@@ -21,7 +21,7 @@ import request from '@/utils/request'
 
 export function login(params) {
   return request({
-    url: '/auth/login',
+    url: '/sys/auth/login',
     method: 'post',
     data: params
   })
@@ -30,7 +30,7 @@ export function login(params) {
 // 注册方法
 export function register(data) {
   return request({
-    url: '/auth/register',
+    url: '/sys/auth/register',
     headers: {
       isToken: false
     },

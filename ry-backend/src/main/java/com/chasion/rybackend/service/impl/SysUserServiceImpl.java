@@ -8,6 +8,7 @@ import com.chasion.rybackend.mappers.SysUserMapper;
 import com.chasion.rybackend.mappers.SysUserRoleMapper;
 import com.chasion.rybackend.resp.Result;
 import com.chasion.rybackend.resp.ResultCode;
+import com.chasion.rybackend.service.BaseCommonService;
 import com.chasion.rybackend.service.ISysUserService;
 import com.chasion.rybackend.utils.PasswordUtil;
 import com.chasion.rybackend.utils.StringUtils;
@@ -29,6 +30,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Autowired
     private SysUserRoleMapper userRoleMapper;
+
+    @Autowired
+    private BaseCommonService baseCommonService;
 
 
     /**
@@ -53,6 +57,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         }
         try {
             // 填充数据
+            user.setNickname(user.getUsername());
             user.setCreateTime(new Date());
             String salt = StringUtils.randomGen(8);
             // 密码加密
@@ -63,7 +68,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             user.setStatus(Constants.USER_STATUS_0);
             user.setDelFlag(Constants.USER_DEL_FLAG_0);
             this.save(user);
-            if (StringUtils.isEmpty(roles)) {
+            if (!StringUtils.isEmpty(roles)) {
                 String[] arr = roles.split(",");
                 for (String roleId : arr) {
                     // 添加用户角色
@@ -72,6 +77,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
                 }
             }
         }catch (Exception e) {
+            log.error(e.getMessage());
            return Result.error(ResultCode.BAD_REQUEST.getCode(), e.getMessage());
         }
         return Result.success("注册成功");
@@ -88,22 +94,25 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
-    public String loginUser(String username, String password) {
-        SysUser sysUser = userMapper.selectUserByUsername(username);
-        if (sysUser != null) {
-            if (sysUser.getPassword().equals(password)) {
-                return "登录成功";
-            }else {
-                return "密码错误";
-            }
-        }else {
-            return "用户不存在";
-        }
+    public String login(String username, String password) {
+        return "";
     }
 
     @Override
     public SysUser getUserByUserId(Long userId) {
         return userMapper.selectUserByUserId(userId);
+    }
+
+    @Override
+    public Result<?> checkUserIsEffective(SysUser user) {
+        Result<?> result = new Result<>();
+        // user 不存在
+        if (user == null) {
+            result.error(ResultCode.BAD_REQUEST.getCode(), "该用户不存在，请注册");
+            baseCommonService.addLog("用户登录失败，用户不存在!", Constants.LOG_TYPE_1, null);
+        }
+
+        return null;
     }
 
 }
