@@ -1,5 +1,6 @@
 package com.chasion.rybackend.service.impl;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.chasion.rybackend.commons.Constants;
 import com.chasion.rybackend.entities.SysUser;
@@ -110,7 +111,39 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         if (user == null) {
             result.error(ResultCode.BAD_REQUEST.getCode(), "该用户不存在，请注册");
             baseCommonService.addLog("用户登录失败，用户不存在!", Constants.LOG_TYPE_1, null);
+            return result;
         }
+        // user 已注销
+        if (Constants.USER_DEL_FLAG_1.equals(user.getDelFlag())) {
+            baseCommonService.addLog("用户登录失败，用户名:" + user.getUsername() + "已注销!",Constants.LOG_TYPE_1, null);
+            result.error(ResultCode.BAD_REQUEST.getCode(), "该用户已注销");
+            return result;
+        }
+        // user 已冻结  0是未冻结，1是冻结
+        if (Constants.USER_STATUS_1.equals(user.getStatus())) {
+            baseCommonService.addLog("用户登录失败，用户名:" + user.getUsername() + "已冻结!", Constants.LOG_TYPE_1, null);
+            result.error(ResultCode.BAD_REQUEST.getCode(), "该用户已冻结");
+            return result;
+        }
+
+        return result;
+    }
+
+    /**
+     * 封装用户信息
+     * @param user
+     * @param result
+     * @return
+     */
+    @Override
+    public Result<JSONObject> userInfo(SysUser user, Result<JSONObject> result) {
+        String username = user.getUsername();
+        String password = user.getPassword();
+        JSONObject obj = new JSONObject();
+        // 获取部门信息
+        Long deptId = user.getDeptId();
+
+
 
         return null;
     }

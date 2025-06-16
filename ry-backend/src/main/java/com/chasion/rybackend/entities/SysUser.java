@@ -19,6 +19,7 @@ public class SysUser extends BaseEntity{
 
     private Long userId;
 
+    // 当前登录的部门id
     private Long deptId;
 
     @TableField("user_name")

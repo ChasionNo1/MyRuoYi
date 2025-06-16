@@ -1,5 +1,6 @@
 package com.chasion.rybackend.service;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.chasion.rybackend.entities.SysUser;
 import com.chasion.rybackend.resp.Result;
@@ -29,4 +30,6 @@ public interface ISysUserService extends IService<SysUser> {
     SysUser getUserByUserId(Long userId);
 
     Result checkUserIsEffective(SysUser user);
+
+    Result<JSONObject> userInfo(SysUser user, Result<JSONObject> result);
 }

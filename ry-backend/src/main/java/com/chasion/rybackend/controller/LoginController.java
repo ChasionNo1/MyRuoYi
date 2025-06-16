@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.chasion.rybackend.entities.SysUser;
 import com.chasion.rybackend.resp.Result;
+import com.chasion.rybackend.resp.ResultCode;
 import com.chasion.rybackend.service.ISysUserService;
+import com.chasion.rybackend.utils.PasswordUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -43,9 +45,24 @@ public class LoginController {
         queryWrapper.eq(SysUser::getUsername, username);
         SysUser sysUser = sysUserService.getOne(queryWrapper);
         // 2、查出来的user再进行校验用户是否有效
+        Result result = sysUserService.checkUserIsEffective(sysUser);
+        // 这里应该判断失败情况
+        if (result.getCode().equals(ResultCode.BAD_REQUEST.getCode())) {
+            return result;
+        }
+        // 3、校验用户密码是否正确
+        String encrypt = PasswordUtil.encrypt(username, password, sysUser.getSalt());
+        String save = sysUser.getPassword();
+        if (!save.equals(encrypt)) {
+            result.error(ResultCode.BAD_REQUEST.getCode(), "用户名或密码错误");
+            return result;
+        }
+        // 封装用户登录信息
 
 
     }
+
+
 
 
 }
