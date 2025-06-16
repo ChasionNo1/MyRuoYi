@@ -5,12 +5,15 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.chasion.rybackend.commons.Constants;
 import com.chasion.rybackend.entities.SysUser;
 import com.chasion.rybackend.entities.SysUserRole;
+import com.chasion.rybackend.manager.AsyncManager;
+import com.chasion.rybackend.manager.factory.AsyncFactory;
 import com.chasion.rybackend.mappers.SysUserMapper;
 import com.chasion.rybackend.mappers.SysUserRoleMapper;
 import com.chasion.rybackend.resp.Result;
 import com.chasion.rybackend.resp.ResultCode;
 import com.chasion.rybackend.service.BaseCommonService;
 import com.chasion.rybackend.service.ISysUserService;
+import com.chasion.rybackend.utils.MessageUtils;
 import com.chasion.rybackend.utils.PasswordUtil;
 import com.chasion.rybackend.utils.StringUtils;
 import org.slf4j.Logger;
@@ -81,6 +84,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             log.error(e.getMessage());
            return Result.error(ResultCode.BAD_REQUEST.getCode(), e.getMessage());
         }
+        // 异步添加日志信息
+        AsyncManager.me().execute(AsyncFactory.recordLogininfor(user.getUsername(), Constants.REGISTER, MessageUtils.message("user.register.success")));
         return Result.success("注册成功");
     }
 
