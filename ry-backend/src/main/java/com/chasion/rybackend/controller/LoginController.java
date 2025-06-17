@@ -1,7 +1,6 @@
 package com.chasion.rybackend.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.chasion.rybackend.entities.SysUser;
 import com.chasion.rybackend.resp.Result;
 import com.chasion.rybackend.resp.ResultCode;
@@ -13,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -58,6 +56,7 @@ public class LoginController {
             return result;
         }
         // 封装用户登录信息
+        return new Result<>();
 
 
     }

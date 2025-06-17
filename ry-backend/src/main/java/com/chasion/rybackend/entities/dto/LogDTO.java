@@ -2,8 +2,7 @@ package com.chasion.rybackend.entities.dto;
 
 import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.chasion.rybackend.entities.vo.LoginUser;
-import lombok.AllArgsConstructor;
+import com.chasion.rybackend.entities.LoginUser;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

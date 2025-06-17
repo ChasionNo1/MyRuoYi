@@ -11,7 +11,6 @@ import com.chasion.rybackend.mappers.SysUserMapper;
 import com.chasion.rybackend.mappers.SysUserRoleMapper;
 import com.chasion.rybackend.resp.Result;
 import com.chasion.rybackend.resp.ResultCode;
-import com.chasion.rybackend.service.BaseCommonService;
 import com.chasion.rybackend.service.ISysUserService;
 import com.chasion.rybackend.utils.MessageUtils;
 import com.chasion.rybackend.utils.PasswordUtil;
@@ -35,8 +34,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Autowired
     private SysUserRoleMapper userRoleMapper;
 
-    @Autowired
-    private BaseCommonService baseCommonService;
 
 
     /**
@@ -115,18 +112,21 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         // user 不存在
         if (user == null) {
             result.error(ResultCode.BAD_REQUEST.getCode(), "该用户不存在，请注册");
-            baseCommonService.addLog("用户登录失败，用户不存在!", Constants.LOG_TYPE_1, null);
+//            baseCommonService.addLog("用户登录失败，用户不存在!", Constants.LOG_TYPE_1, null);
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(user.getUsername(), Constants.USER_IS_NOT_EXIST, MessageUtils.message("user.not.exist")));
             return result;
         }
         // user 已注销
         if (Constants.USER_DEL_FLAG_1.equals(user.getDelFlag())) {
-            baseCommonService.addLog("用户登录失败，用户名:" + user.getUsername() + "已注销!",Constants.LOG_TYPE_1, null);
+//            baseCommonService.addLog("用户登录失败，用户名:" + user.getUsername() + "已注销!",Constants.LOG_TYPE_1, null);
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(user.getUsername(), Constants.USER_IS_DEL, MessageUtils.message("user.has.del")));
             result.error(ResultCode.BAD_REQUEST.getCode(), "该用户已注销");
             return result;
         }
         // user 已冻结  0是未冻结，1是冻结
         if (Constants.USER_STATUS_1.equals(user.getStatus())) {
-            baseCommonService.addLog("用户登录失败，用户名:" + user.getUsername() + "已冻结!", Constants.LOG_TYPE_1, null);
+//            baseCommonService.addLog("用户登录失败，用户名:" + user.getUsername() + "已冻结!", Constants.LOG_TYPE_1, null);
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(user.getUsername(), Constants.USER_IS_FROZEN, MessageUtils.message("user.has.freeze")));
             result.error(ResultCode.BAD_REQUEST.getCode(), "该用户已冻结");
             return result;
         }

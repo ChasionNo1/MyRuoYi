@@ -181,4 +181,17 @@ public class Constants
      * 系统日志类型： 登录
      */
     public static final int LOG_TYPE_1 = 1;
+
+    public static final String TOKEN_IS_INVALID_MSG = "token失效，请重新登录";
+
+    // token
+    public static final String X_ACCESS_TOKEN = "X-Access-Token";
+
+    public static final String USER_IS_NOT_EXIST = "用户不存在";
+    public static final String USER_IS_DEL = "用户已注销";
+    public static final String USER_IS_FROZEN = "用户已冻结";
+    /**
+     * 缓存用户信息
+     */
+    public static final String SYS_USERS_CACHE = "sys:cache:user";
 }
