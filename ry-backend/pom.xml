@@ -67,11 +67,6 @@
             <artifactId>UserAgentUtils</artifactId>
             <version>${bitwalker.version}</version>
         </dependency>
-<!--        &lt;!&ndash; spring security 安全认证 &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-security</artifactId>-->
-<!--        </dependency>-->
         <!-- Shiro Starter -->
         <dependency>
             <groupId>org.apache.shiro</groupId>
@@ -121,12 +116,6 @@
             <artifactId>poi-ooxml</artifactId>
             <version>${poi.version}</version>
         </dependency>
-<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.mybatis.spring.boot</groupId>-->
-<!--            <artifactId>mybatis-spring-boot-starter</artifactId>-->
-<!--            <version>2.2.2</version>-->
-<!--        </dependency>-->
 
     </dependencies>
     <dependencyManagement>

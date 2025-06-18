@@ -52,9 +52,6 @@ public class SysUser extends BaseEntity{
 
     private Date loginDate;
 
-    /** 密码最后更新时间 */
-    private Date pwdUpdateDate;
-
     /** 部门对象，表里没有这个字段的 */
     @TableField(exist = false)
     private SysDept dept;
