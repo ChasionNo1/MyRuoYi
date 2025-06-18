@@ -1,6 +1,7 @@
 package com.chasion.rybackend.service.impl;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.chasion.rybackend.commons.Constants;
 import com.chasion.rybackend.entities.SysUser;
@@ -19,9 +20,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.HashMap;
 
 @Service
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements ISysUserService {
@@ -44,6 +45,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      * @date: 2025/6/14 20:10
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Result registerUserWithRole(SysUser user, String roles) {
         // 先来判断一下，在controller里已经判断了不为空、验证码的问题
         // 判断用户是否注册过
@@ -113,7 +115,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         if (user == null) {
             result.error(ResultCode.BAD_REQUEST.getCode(), "该用户不存在，请注册");
 //            baseCommonService.addLog("用户登录失败，用户不存在!", Constants.LOG_TYPE_1, null);
-            AsyncManager.me().execute(AsyncFactory.recordLogininfor(user.getUsername(), Constants.USER_IS_NOT_EXIST, MessageUtils.message("user.not.exist")));
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor("null", Constants.USER_IS_NOT_EXIST, MessageUtils.message("user.not.exist")));
             return result;
         }
         // user 已注销
@@ -151,6 +153,20 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
 
         return null;
+    }
+
+    /**
+     * 更新用户信息
+     * @param sysUser
+     * @return
+     */
+    @Override
+    public int updateUserInfo(SysUser sysUser) {
+        // 这里通过判断要更新的字段是否存在，这里限制更新哪些内容？
+        QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(SysUser::getUserId, sysUser.getUserId());
+        return userMapper.update(sysUser, queryWrapper);
+
     }
 
 }

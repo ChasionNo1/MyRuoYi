@@ -11,6 +11,7 @@ import com.chasion.rybackend.manager.AsyncManager;
 import com.chasion.rybackend.manager.factory.AsyncFactory;
 import com.chasion.rybackend.utils.*;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.shiro.SecurityUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -81,8 +82,11 @@ public class LogAspect {
 
     protected void handleLog(final JoinPoint joinPoint, Log controllerLog, final Exception e, Object jsonResult) {
         try {
-            // 获取当前的用户
-            LoginUser loginUser = SecurityUtils.getLoginUser();
+            // 获取当前的用户 这里是从 SecurityUtils.getLoginUser();获取的
+//            LoginUser loginUser = SecurityUtils.getLoginUser();
+            // 改用shiro来获取
+            LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+
 
             // *========数据库日志=========*//
             SysOperLog operLog = new SysOperLog();

@@ -46,7 +46,7 @@ public class BaseCommonServiceImpl implements IBaseCommonService {
      */
     @Override
     public Set<String> queryUserRoles(String username) {
-        List<String> roles = sysUserRoleMapper.getRoleByUserName(username);
+        List<String> roles = sysUserRoleMapper.getRoleCodeByUserName(username);
         log.info("-------通过数据库读取用户拥有的角色Rules------username： " + username + ",Roles size: " + (roles == null ? 0 : roles.size()));
         return new HashSet<>(roles);
     }

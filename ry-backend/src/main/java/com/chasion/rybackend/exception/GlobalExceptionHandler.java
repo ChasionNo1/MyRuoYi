@@ -1,7 +1,6 @@
 package com.chasion.rybackend.exception;
 
 import com.chasion.rybackend.resp.Result;
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -52,19 +51,7 @@ public class GlobalExceptionHandler {
         log.error("参数校验失败: {}", errorMsg);
         return Result.error(400, errorMsg);
     }
-    /** 
-     * @description: 当 Token 过期时会自动抛出该异常
-     * @param: e
-     * @return: 
- * @return com.chasion.rybackend.resp.Result
-     * @author chasion
-     * @date: 2025/6/14 14:21
-     */ 
-    @ExceptionHandler(ExpiredJwtException.class)
-    public Result handleExpiredJwtException(ExpiredJwtException e) {
-        return Result.error(401, "访问令牌已过期，请刷新");
-    }
-    
+
     /** 
      * @description: 处理所有未捕获异常
      * @param: e

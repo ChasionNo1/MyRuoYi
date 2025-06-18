@@ -1,16 +1,22 @@
 package com.chasion.rybackend.controller;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.chasion.rybackend.commons.Constants;
+import com.chasion.rybackend.entities.LoginUser;
 import com.chasion.rybackend.entities.SysUser;
+import com.chasion.rybackend.manager.AsyncManager;
+import com.chasion.rybackend.manager.factory.AsyncFactory;
 import com.chasion.rybackend.resp.Result;
 import com.chasion.rybackend.resp.ResultCode;
 import com.chasion.rybackend.service.ISysUserService;
-import com.chasion.rybackend.utils.PasswordUtil;
+import com.chasion.rybackend.utils.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,6 +34,9 @@ public class LoginController {
     @Autowired
     private ISysUserService sysUserService;
 
+    @Autowired
+    private RedisUtil redisUtil;
+
     /**
      * @description: 登录接口，未开启验证码
      * @param: username password
@@ -37,28 +46,37 @@ public class LoginController {
      */
     @PostMapping("/auth/login")
     @Operation(summary = "用户名密码登录接口，未带验证功能")
-    public Result login(String username, String password){
+    public Result<String> login(@RequestBody LoginUser loginUser){
         // 1、先从数据库根据username查
         LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(SysUser::getUsername, username);
+        queryWrapper.eq(SysUser::getUsername, loginUser.getUsername());
         SysUser sysUser = sysUserService.getOne(queryWrapper);
         // 2、查出来的user再进行校验用户是否有效
         Result result = sysUserService.checkUserIsEffective(sysUser);
         // 这里应该判断失败情况
-        if (result.getCode().equals(ResultCode.BAD_REQUEST.getCode())) {
+        if (ResultCode.BAD_REQUEST.getCode().equals(result.getCode())) {
             return result;
         }
         // 3、校验用户密码是否正确
-        String encrypt = PasswordUtil.encrypt(username, password, sysUser.getSalt());
+        String encrypt = PasswordUtil.encrypt(loginUser.getUsername(), loginUser.getPassword(), sysUser.getSalt());
         String save = sysUser.getPassword();
         if (!save.equals(encrypt)) {
             result.error(ResultCode.BAD_REQUEST.getCode(), "用户名或密码错误");
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(loginUser.getUsername(), Constants.LOGIN_FAIL, MessageUtils.message("user.password.not.match")));
             return result;
         }
-        // 封装用户登录信息
-        return new Result<>();
-
-
+        // 登录成功
+        AsyncManager.me().execute(AsyncFactory.recordLogininfor(loginUser.getUsername(), Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
+        // 更新用户信息
+        sysUser.setLoginIp(IpUtils.getIpAddr());
+        sysUser.setLoginDate(DateUtil.date());
+        sysUserService.updateUserInfo(sysUser);
+        // 生成token
+        String token = JwtUtils.sign(new LoginUser().setUserId(sysUser.getUserId()).setUsername(sysUser.getUsername()).setDeptId(sysUser.getDeptId()), "pc", loginUser.getPassword());
+        // 设置token缓存有效时间
+        redisUtil.set(Constants.PREFIX_USER_TOKEN + token, token);
+        redisUtil.expire(Constants.PREFIX_USER_TOKEN + token, JwtUtils.EXPIRE_TIME * 2 / 1000);
+        return new Result<>(ResultCode.SUCCESS.getCode(), "登录成功", token);
     }
 
 

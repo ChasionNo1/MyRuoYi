@@ -87,4 +87,5 @@ public class ISysLogininforServiceImpl extends ServiceImpl<SysLogininforMapper, 
     public void cleanLogininfor() {
         logininforMapper.cleanLogininfor();
     }
+
 }

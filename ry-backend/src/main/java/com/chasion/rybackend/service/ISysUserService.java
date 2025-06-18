@@ -5,8 +5,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.chasion.rybackend.entities.SysUser;
 import com.chasion.rybackend.resp.Result;
 
-import java.util.HashMap;
-
 /**
  * 用户业务层
  * */
@@ -32,4 +30,6 @@ public interface ISysUserService extends IService<SysUser> {
     Result checkUserIsEffective(SysUser user);
 
     Result<JSONObject> userInfo(SysUser user, Result<JSONObject> result);
+
+    public int updateUserInfo(SysUser user);
 }

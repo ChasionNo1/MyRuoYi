@@ -4,6 +4,7 @@ import com.chasion.rybackend.commons.Constants;
 import com.chasion.rybackend.shiro.JwtToken;
 import com.chasion.rybackend.utils.JwtUtils;
 import com.chasion.rybackend.utils.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  * @description: TODO 鉴权登录拦截器
  * @date 2025/6/17 14:11
  */
+@Slf4j
 public class JwtFilter extends BasicHttpAuthenticationFilter {
     /**
      * 默认开启跨域设置（使用单体）
@@ -45,6 +47,9 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
         try {
+            // test
+            HttpServletRequest req = (HttpServletRequest) request;
+            log.info("request uri" + req.getRequestURI());
             executeLogin(request, response);
             return true;
         }catch (Exception e) {
@@ -89,6 +94,13 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+        // 记录所有请求信息
+        log.info("===== 请求信息 =====");
+        log.info("请求路径: {}", (httpServletRequest.getRequestURI()));
+        log.info("请求方法: {}", httpServletRequest.getMethod());
+        log.info("上下文路径: {}", httpServletRequest.getContextPath());
+        log.info("查询参数: {}", httpServletRequest.getQueryString());
+        log.info("请求头: ");
         if(allowOrigin){
             httpServletResponse.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, httpServletRequest.getHeader(HttpHeaders.ORIGIN));
             // 允许客户端请求方法
@@ -104,7 +116,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         // 跨域时会首先发送一个option请求，这里我们给option请求直接返回正常状态
         if (RequestMethod.OPTIONS.name().equalsIgnoreCase(httpServletRequest.getMethod())) {
             httpServletResponse.setStatus(HttpStatus.OK.value());
-            return false;
+            return true;
         }
         //update-begin-author:taoyan date:20200708 for:多租户用到
 //        String tenantId = httpServletRequest.getHeader(CommonConstant.TENANT_ID);

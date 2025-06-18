@@ -13,6 +13,10 @@ spring:
       maximum-pool-size: 15
       minimum-idle: 5
       idle-timeout: 30000
+  # 资源信息
+  messages:
+    # 国际化资源文件路径
+    basename: i18n/messages
 
   # Redis 配置
   redis:
@@ -51,6 +55,8 @@ spring:
 mybatis-plus:
   mapper-locations: classpath:mappers/*.xml
   type-aliases-package: com.chasion.rybackend.entities
+  # 新增 Mapper 接口扫描包
+  type-mappers-package: com.chasion.rybackend.mappers  # 关键配置
   global-config:
     # 关闭MP3.0自带的banner
     banner: false
@@ -69,4 +75,6 @@ mybatis-plus:
     call-setters-on-nulls: true
     local-cache-scope: statement
 
-
+logging:
+  level:
+    org.apache.shiro.web.filter.mgt.PathMatchingFilterChainResolver: DEBUG

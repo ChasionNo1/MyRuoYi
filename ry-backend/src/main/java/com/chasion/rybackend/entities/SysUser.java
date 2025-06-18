@@ -28,11 +28,16 @@ public class SysUser extends BaseEntity{
     @TableField("nick_name")
     private String nickname;
 
+    private String userType;
+
     private String email;
 
-    private String phoneNumber;
+    @TableField("phonenumber")
+    private String phonenumber;
 
     private String sex;
+
+    private String avatar;
 
     private String password;
 
@@ -50,18 +55,24 @@ public class SysUser extends BaseEntity{
     /** 密码最后更新时间 */
     private Date pwdUpdateDate;
 
+    /** 部门对象，表里没有这个字段的 */
+    @TableField(exist = false)
     private SysDept dept;
 
     /** 角色对象 */
+    @TableField(exist = false)
     private List<SysRole> roles;
 
     /** 角色组 */
+    @TableField(exist = false)
     private Long[] roleIds;
 
     /** 岗位组 */
+    @TableField(exist = false)
     private Long[] postIds;
 
     /** 角色ID */
+    @TableField(exist = false)
     private Long roleId;
 
     public static boolean isAdmin(Long userId)

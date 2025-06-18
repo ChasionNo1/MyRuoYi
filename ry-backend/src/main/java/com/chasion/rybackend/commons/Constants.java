@@ -194,4 +194,6 @@ public class Constants
      * 缓存用户信息
      */
     public static final String SYS_USERS_CACHE = "sys:cache:user";
+
+    public static final String PREFIX_USER_TOKEN = "prefix_user_token_";
 }

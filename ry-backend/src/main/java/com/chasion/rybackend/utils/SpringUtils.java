@@ -8,6 +8,7 @@ import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 
 /**
  * @author chasion
@@ -15,6 +16,7 @@ import org.springframework.context.ApplicationContextAware;
  * @description: TODO spring工具类 方便在非spring管理环境中获取bean
  * @date 2025/6/16 22:07
  */
+@Component
 public class SpringUtils implements BeanFactoryPostProcessor, ApplicationContextAware {
 
     /** Spring应用上下文环境 */

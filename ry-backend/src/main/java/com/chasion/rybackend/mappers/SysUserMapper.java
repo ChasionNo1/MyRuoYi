@@ -2,10 +2,9 @@ package com.chasion.rybackend.mappers;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.chasion.rybackend.entities.SysUser;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
-@Mapper
+
 public interface SysUserMapper extends BaseMapper<SysUser> {
     /**
      * 新增用户信息

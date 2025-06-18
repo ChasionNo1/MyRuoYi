@@ -5,10 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -23,13 +20,23 @@ import java.util.Set;
 @NoArgsConstructor
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-public class LoginUser implements UserDetails {
+public class LoginUser {
     private static final long serialVersionUID = 1L;
 
     /**
      * 用户ID
      */
     private Long userId;
+
+    /**
+     * 用户名
+     */
+    private String username;
+
+    /**
+     * 密码
+     */
+    private String password;
 
     /**
      * 部门ID
@@ -81,42 +88,17 @@ public class LoginUser implements UserDetails {
      */
     private SysUser user;
 
+    /**
+     * 角色列表
+     */
     private List<Long> roleIds;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
-    }
+    /**
+     * 状态
+     * 1 正常
+     * 2 冻结
+     */
+    private Integer status;
 
-    @Override
-    public String getPassword() {
-        return user.getPassword();
-    }
-
-    @Override
-    // 获取用户名
-    public String getUsername() {
-    	return user.getUsername();
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 
 }
