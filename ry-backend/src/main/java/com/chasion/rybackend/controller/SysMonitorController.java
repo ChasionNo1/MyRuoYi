@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * @author 32260
  * @version 1.0
@@ -21,8 +24,8 @@ public class SysMonitorController {
     private ISysMonitorService sysMonitorService;
 
     @RequestMapping("/getSystemInfo")
-    public Result<SystemMonitor> getSysMonitorInfo() {
-        SystemMonitor sysMonitor = sysMonitorService.getSysMonitorInfo();
-        return Result.success(sysMonitor);
+    public Result<List<HashMap<String, Object>>> getSysMonitorInfo() {
+        List<HashMap<String, Object>> sysMonitorInfo = sysMonitorService.getSysMonitorInfo();
+        return Result.success(sysMonitorInfo);
     }
 }

@@ -15,7 +15,7 @@ import oshi.util.Util;
 
 import java.lang.management.*;
 import java.text.DecimalFormat;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class SysMonitorServiceImpl extends ServiceImpl<SystemMonitorMapper, SystemMonitor> implements ISysMonitorService {
@@ -26,24 +26,69 @@ public class SysMonitorServiceImpl extends ServiceImpl<SystemMonitorMapper, Syst
     private static final DecimalFormat df = new DecimalFormat("0.00");
 
     @Override
-    public SystemMonitor getSysMonitorInfo() {
+    public List<HashMap<String, Object>> getSysMonitorInfo() {
         SystemMonitor monitor = new SystemMonitor();
 
-        // 获取并设置CPU信息
+        // 获取系统信息
         setCpuInfo(monitor);
-
-        // 获取并设置内存信息
         setMemoryInfo(monitor);
-
-        // 获取并设置磁盘信息
         setDiskInfo(monitor);
-
-        // 获取并设置JVM信息
         setJvmInfo(monitor);
 
-        return monitor;
+        // 构建返回结果列表
+        List<HashMap<String, Object>> resultList = new ArrayList<>();
+
+        // 1. CPU信息组
+        HashMap<String, Object> cpuGroup = new HashMap<>();
+        cpuGroup.put("title", "cpu");
+        HashMap<String, String> cpuData = new HashMap<>();
+        cpuData.put("cpuUsage", monitor.getCpuUsage());
+        cpuData.put("cpuCoreNum", monitor.getCpuCoreNum());
+        cpuData.put("cpuName", monitor.getCpuName());
+        cpuData.put("cpuFrequency", monitor.getCpuFrequency());
+        cpuGroup.put("data", cpuData);
+        resultList.add(cpuGroup);
+
+        // 2. 内存信息组
+        HashMap<String, Object> memoryGroup = new HashMap<>();
+        memoryGroup.put("title", "memory");
+        HashMap<String, String> memoryData = new HashMap<>();
+        memoryData.put("memoryUsage", monitor.getMemoryUsage());
+        memoryData.put("memoryTotal", monitor.getMemoryTotal());
+        memoryData.put("memoryFree", monitor.getMemoryFree());
+        memoryData.put("memoryUsed", monitor.getMemoryUsed());
+        memoryGroup.put("data", memoryData);
+        resultList.add(memoryGroup);
+
+        // 3. 磁盘信息组
+        HashMap<String, Object> diskGroup = new HashMap<>();
+        diskGroup.put("title", "disk");
+        HashMap<String, String> diskData = new HashMap<>();
+        diskData.put("diskUsage", monitor.getDiskUsage());
+        diskData.put("diskTotal", monitor.getDiskTotal());
+        diskData.put("diskFree", monitor.getDiskFree());
+        diskData.put("diskUsed", monitor.getDiskUsed());
+        diskGroup.put("data", diskData);
+        resultList.add(diskGroup);
+
+        // 4. JVM信息组
+        HashMap<String, Object> jvmGroup = new HashMap<>();
+        jvmGroup.put("title", "jvm");
+        HashMap<String, String> jvmData = new HashMap<>();
+        jvmData.put("heapUsage", monitor.getHeapUsage());
+        jvmData.put("heapUsed", monitor.getHeapUsed());
+        jvmData.put("heapMax", monitor.getHeapMax());
+        jvmData.put("nonHeapUsed", monitor.getNonHeapUsed());
+//        jvmData.put("nonHeapMax", monitor.getNonHeapMax());
+        jvmData.put("threadActive", monitor.getThreadActive());
+        jvmData.put("jvmVersion", monitor.getJvmVersion());
+        jvmGroup.put("data", jvmData);
+        resultList.add(jvmGroup);
+
+        return resultList;
     }
 
+    // 以下私有方法保持不变，与原始实现一致
     private void setCpuInfo(SystemMonitor monitor) {
         CentralProcessor processor = hardware.getProcessor();
         long[] prevTicks = processor.getSystemCpuLoadTicks();
@@ -51,7 +96,7 @@ public class SysMonitorServiceImpl extends ServiceImpl<SystemMonitorMapper, Syst
         double cpuUsage = processor.getSystemCpuLoadBetweenTicks(prevTicks) * 100;
 
         monitor.setCpuUsage(df.format(cpuUsage) + "%")
-                .setCpuCoreNum(processor.getLogicalProcessorCount())
+                .setCpuCoreNum(String.valueOf(processor.getLogicalProcessorCount()))
                 .setCpuName(processor.getProcessorIdentifier().getName())
                 .setCpuFrequency(df.format(processor.getProcessorIdentifier().getVendorFreq() / 1_000_000_000.0) + " GHz");
     }
@@ -74,7 +119,7 @@ public class SysMonitorServiceImpl extends ServiceImpl<SystemMonitorMapper, Syst
         long totalSpace = 0;
         long freeSpace = 0;
 
-        for (oshi.software.os.OSFileStore fs : fileStores) {
+        for (OSFileStore fs : fileStores) {
             totalSpace += fs.getTotalSpace();
             freeSpace += fs.getFreeSpace();
         }
@@ -89,28 +134,24 @@ public class SysMonitorServiceImpl extends ServiceImpl<SystemMonitorMapper, Syst
     }
 
     private void setJvmInfo(SystemMonitor monitor) {
-        // 获取JVM内存信息
         MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
         MemoryUsage heapMemory = memoryBean.getHeapMemoryUsage();
         MemoryUsage nonHeapMemory = memoryBean.getNonHeapMemoryUsage();
 
-        // 获取线程信息
         ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
-
-        // 获取JVM版本信息
         RuntimeMXBean runtimeBean = ManagementFactory.getRuntimeMXBean();
 
-        monitor.setHeapUsed(formatBytes(heapMemory.getUsed()))
+        double jvmUsage = (double) heapMemory.getUsed() / heapMemory.getMax() * 100;
+
+        monitor.setHeapUsage(df.format(jvmUsage) + "%")
+                .setHeapUsed(formatBytes(heapMemory.getUsed()))
                 .setHeapMax(formatBytes(heapMemory.getMax()))
                 .setNonHeapUsed(formatBytes(nonHeapMemory.getUsed()))
                 .setNonHeapMax(formatBytes(nonHeapMemory.getMax()))
-                .setThreadActive(threadBean.getThreadCount())
+                .setThreadActive(String.valueOf(threadBean.getThreadCount()))
                 .setJvmVersion(runtimeBean.getVmName() + " " + runtimeBean.getVmVersion());
     }
 
-    /**
-     * 格式化字节大小为易读格式 (B, KB, MB, GB, TB)
-     */
     private String formatBytes(long bytes) {
         if (bytes < 1024) return bytes + " B";
         int exp = (int) (Math.log(bytes) / Math.log(1024));

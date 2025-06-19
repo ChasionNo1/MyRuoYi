@@ -3,6 +3,9 @@ package com.chasion.rybackend.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.chasion.rybackend.entities.SystemMonitor;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * @author 32260
  * @version 1.0
@@ -11,5 +14,5 @@ import com.chasion.rybackend.entities.SystemMonitor;
  */
 public interface ISysMonitorService extends IService<SystemMonitor> {
 
-    public SystemMonitor getSysMonitorInfo();
+    public List<HashMap<String, Object>> getSysMonitorInfo();
 }

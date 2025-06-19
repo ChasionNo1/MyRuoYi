@@ -23,7 +23,7 @@ export default {
     // 高度
     height: {
       type: String,
-      default: '400px'
+      default: '300px'
     },
     // 主题
     theme: {

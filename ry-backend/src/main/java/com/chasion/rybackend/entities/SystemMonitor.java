@@ -20,7 +20,7 @@ public class SystemMonitor extends BaseEntity{
     private String cpuUsage;
 
     /** cpu 核心数 */
-    private Integer cpuCoreNum;
+    private String cpuCoreNum;
 
     /** cpu 名称 */
     private String cpuName;
@@ -52,6 +52,9 @@ public class SystemMonitor extends BaseEntity{
     /** 磁盘使用率 */
     private String diskUsage;
 
+    /** 堆内存使用率 */
+    private String heapUsage;
+
     /** 堆内存使用量 */
     private String heapUsed;
 
@@ -65,7 +68,7 @@ public class SystemMonitor extends BaseEntity{
     private String nonHeapMax;
 
     /** 活动线程数 */
-    private Integer threadActive;
+    private String threadActive;
 
     /** jvm 版本 */
     private String jvmVersion;
