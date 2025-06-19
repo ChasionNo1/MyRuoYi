@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import { login as loginApi, getInfo as getInfoApi, register as registerApi } from '@/api/login';
+import { login as loginApi, getInfo as getInfoApi, register as registerApi, logoutApi } from '@/api/login';
 import { getAction } from '@/api/manage';
 
 export const useUserStore = defineStore('user', () => {
@@ -40,7 +40,7 @@ export const useUserStore = defineStore('user', () => {
   }
 
   // 获取用户信息
-  function getInfo() {
+  async function getInfo() {
     return new Promise((resolve, reject) => {
       getInfoApi() // 使用重命名后的 API
         .then((res) => {
@@ -59,10 +59,17 @@ export const useUserStore = defineStore('user', () => {
   }
 
   // 退出登录
-  function logout() {
-    token.value = '';
-    roles.value = [];
-    permissions.value = [];
+  async function logout() {
+    try {
+      const result = await logoutApi();
+      if (result.code === 200) {
+        token.value = '';
+        roles.value = [];
+        permissions.value = [];
+      }
+    }catch (error) {
+      throw new Error(error)
+    }
   }
 
   const hasAdminRole = computed(() => roles.value.includes('admin'));

@@ -83,10 +83,10 @@ public class LoginUser {
      */
     private Set<String> permissions;
 
-    /**
-     * 用户信息
-     */
-    private SysUser user;
+//    /**
+//     * 用户信息
+//     */
+//    private SysUser user;
 
     /**
      * 角色列表
@@ -98,7 +98,7 @@ public class LoginUser {
      * 1 正常
      * 2 冻结
      */
-    private Integer status;
+    private String status;
 
 
 }

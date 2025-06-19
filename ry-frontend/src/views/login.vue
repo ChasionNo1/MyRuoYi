@@ -11,8 +11,8 @@ const loginRef = ref()
 const userStore = useUserStore()
 const router = useRouter()
 const loginForm = ref({
-  username: "admin",
-  password: "123456",
+  username: "chasion",
+  password: "cr199725..",
   rememberMe: false,
   code: "",
   uuid: ""

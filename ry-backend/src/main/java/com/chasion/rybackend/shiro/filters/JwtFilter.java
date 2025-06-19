@@ -70,6 +70,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
        // 从请求头里获取token
         HttpServletRequest req = (HttpServletRequest) request;
         String token = req.getHeader(Constants.X_ACCESS_TOKEN);
+        log.info("token: {}", token);
         // 如果这里token为空
         if (StringUtils.isEmpty(token)){
             // 再去请求参数里获取

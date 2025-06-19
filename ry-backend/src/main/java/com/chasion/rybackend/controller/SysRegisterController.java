@@ -61,6 +61,7 @@ public class SysRegisterController extends BaseController{
         sysUser.setUsername(username);
         sysUser.setPassword(password);
         sysUser.setEmail(email);
+        sysUser.setDeptId(100L);
         return userService.registerUserWithRole(sysUser, "");
     }
 

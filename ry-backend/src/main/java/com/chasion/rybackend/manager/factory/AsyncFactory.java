@@ -1,6 +1,7 @@
 package com.chasion.rybackend.manager.factory;
 
 
+import cn.hutool.core.date.DateUtil;
 import com.chasion.rybackend.commons.Constants;
 import com.chasion.rybackend.entities.SysLogininfor;
 import com.chasion.rybackend.entities.SysOperLog;
@@ -63,6 +64,7 @@ public class AsyncFactory {
                 logininfor.setBrowser(browser);
                 logininfor.setOs(os);
                 logininfor.setMsg(message);
+                logininfor.setLoginTime(DateUtil.date());
                 // 日志状态
                 if (StringUtils.equalsAny(status, Constants.LOGIN_SUCCESS, Constants.LOGOUT, Constants.REGISTER))
                 {

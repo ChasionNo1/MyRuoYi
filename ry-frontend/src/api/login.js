@@ -42,15 +42,15 @@ export function register(data) {
 // 获取用户详细信息
 export function getInfo() {
   return request({
-    url: '/getInfo',
+    url: '/sys/user/getInfo',
     method: 'get'
   })
 }
 
 // 退出方法
-export function logout() {
+export function logoutApi() {
   return request({
-    url: '/logout',
+    url: '/sys/auth/logout',
     method: 'post'
   })
 }

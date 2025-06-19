@@ -93,6 +93,8 @@ public class ShiroRealm extends AuthorizingRealm {
             JwtUtils.responseError(ServletUtils.getResponse(), 401, e.getMessage(), null);
             e.printStackTrace();
             return null;
+        }finally {
+            log.info("===========shiro 身份认证成功 doGetAuthenticationInfo ======= ip地址为：" + req.getRemoteAddr() + "URL:"+ req.getRequestURI());
         }
         return new SimpleAuthenticationInfo(loginUser, token, getName());
     }
@@ -104,12 +106,13 @@ public class ShiroRealm extends AuthorizingRealm {
         }
 
         log.debug("———校验token是否有效————checkUserTokenIsEffect——————— "+ token);
+        // todo 要确保从loginUser获取的数据不为null，也就是说在登录成功设置时，要考虑到位
         LoginUser loginUser = TokenUtils.getLoginUser(username, BaseCommonService, redisUtil);
         if (loginUser == null){
             throw new AuthenticationException("用户不存在！");
         }
-        // 判断用户状态  1 正常
-        if (loginUser.getStatus() != 1) {
+        // 判断用户状态  0 正常
+        if (!Constants.USER_STATUS_0.equals(loginUser.getStatus())) {
             throw new AuthenticationException("用户已被冻结！");
         }
 
@@ -155,7 +158,7 @@ public class ShiroRealm extends AuthorizingRealm {
 
     /**
      * 清除当前用户的权限认证缓存
-     *
+     * 重写父类的方法，这里可以做增强
      * @param principals 权限信息
      */
     @Override

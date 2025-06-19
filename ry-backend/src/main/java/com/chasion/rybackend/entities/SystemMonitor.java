@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class SystemInfo extends BaseEntity{
+public class SystemMonitor extends BaseEntity{
     /** cpu 使用率 */
     private String cpuUsage;
 
@@ -41,13 +41,13 @@ public class SystemInfo extends BaseEntity{
     private String memoryUsed;
 
     /** 磁盘总量 */
-    private Long diskTotal;
+    private String diskTotal;
 
     /** 磁盘剩余 */
-    private Long diskFree;
+    private String diskFree;
 
     /** 磁盘使用 */
-    private Long diskUsed;
+    private String diskUsed;
 
     /** 磁盘使用率 */
     private String diskUsage;
@@ -69,7 +69,5 @@ public class SystemInfo extends BaseEntity{
 
     /** jvm 版本 */
     private String jvmVersion;
-
-
 
 }

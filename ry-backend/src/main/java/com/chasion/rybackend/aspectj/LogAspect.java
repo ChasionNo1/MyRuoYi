@@ -5,7 +5,6 @@ import com.chasion.rybackend.aspectj.lang.annotation.Log;
 import com.chasion.rybackend.aspectj.lang.enums.BusinessStatus;
 import com.chasion.rybackend.entities.LoginUser;
 import com.chasion.rybackend.entities.SysOperLog;
-import com.chasion.rybackend.entities.SysUser;
 import com.chasion.rybackend.filter.PropertyPreExcludeFilter;
 import com.chasion.rybackend.manager.AsyncManager;
 import com.chasion.rybackend.manager.factory.AsyncFactory;
@@ -40,6 +39,7 @@ import java.util.Map;
 @Component
 public class LogAspect {
     private static final Logger log = LoggerFactory.getLogger(LogAspect.class);
+
 
     /**
      * 排除敏感属性字段
@@ -97,10 +97,15 @@ public class LogAspect {
             operLog.setOperUrl(StringUtils.substring(ServletUtils.getRequest().getRequestURI(), 0, 255));
             if (loginUser != null) {
                 operLog.setOperName(loginUser.getUsername());
-                SysUser currentUser = loginUser.getUser();
-                if (StringUtils.isNotNull(currentUser) && StringUtils.isNotNull(currentUser.getDept())) {
-                    operLog.setDeptName(currentUser.getDept().getDeptName());
-                }
+                // 从login里获取user，再进行判断没必要呀，login里有相关的字段
+//                SysUser currentUser = loginUser.getUser();
+//                if (StringUtils.isNotNull(currentUser) && StringUtils.isNotNull(currentUser.getDept())) {
+//                    operLog.setDeptName(currentUser.getDept().getDeptName());
+//                }
+                // todo 通过deptId来获取deptName
+//                if (StringUtils.isNotNull(loginUser.getDeptId())){
+//                    operLog.setDeptName(loginUser.getDeptName());
+//                }
             }
 
             if (e != null) {

@@ -29,6 +29,10 @@ public class Result<T> {
         return new Result(ResultCode.SUCCESS.getCode(), message, null);
     }
 
+    public static <E> Result<E> success(E data) {
+        return new Result<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), data);
+    }
+
     public static Result error(Integer code, String message) {
         return new Result(code, message, null);
     }

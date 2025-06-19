@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -78,5 +79,22 @@ public class RedisUtil {
             return false;
         }
 
+    }
+
+    /**
+     * 删除缓存
+     *
+     * @param key 可以传一个值 或多个
+     */
+    @SuppressWarnings("unchecked")
+    public void del(String... key) {
+        if (key != null && key.length > 0) {
+            if (key.length == 1) {
+                redisTemplate.delete(key[0]);
+            } else {
+                //springboot2.4后用法
+                redisTemplate.delete(Arrays.asList(key));
+            }
+        }
     }
 }

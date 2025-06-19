@@ -19,7 +19,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/auth")
-public class PermissionController {
+public class SysPermissionController {
     @Autowired
     private ISysMenuService menuService;
 

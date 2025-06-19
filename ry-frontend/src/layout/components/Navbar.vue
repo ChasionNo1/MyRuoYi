@@ -14,9 +14,14 @@
 
         <!-- 全屏功能，调用vueuse/core -->
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
-        <!-- tooltip文字提示 effect提示框的背景颜色 -->
-        <el-tooltip content="主题模式" effect="light" placement="bottom">
-          <div class="right-menu-item hover-effect theme-switch-wrapper" @click="toggleTheme">
+        <!-- tooltip文字提示 effect提示框的背景颜色
+         todo 这里跟随主题变动没设计好，应该统一配置的
+          -->
+        <el-tooltip content="主题模式" effect="light" placement="bottom" :visible="tipsVisible">
+          <div class="right-menu-item hover-effect theme-switch-wrapper"
+           @mouseenter="handleMouseEntry"
+           @mouseleave="handleMouseLeave"
+           @click="toggleTheme">
             <svg-icon v-if="settingsStore.isDark" icon-class="sunny" />
             <svg-icon v-if="!settingsStore.isDark" icon-class="moon" />
           </div>
@@ -53,7 +58,7 @@
 </template>
 
 <script setup>
-import { ElMessageBox } from 'element-plus'
+import { ElMessageBox, ElMessage } from 'element-plus'
 import Breadcrumb from '@/components/Breadcrumb'
 import TopNav from '@/components/TopNav'
 import Hamburger from '@/components/Hamburger'
@@ -63,6 +68,7 @@ import SizeSelect from '@/components/SizeSelect'
 import useAppStore from '@/stores/app'
 import useUserStore from '@/stores/user'
 import useSettingsStore from '@/stores/settings'
+import {ref} from 'vue'
 
 const appStore = useAppStore()
 const userStore = useUserStore()
@@ -79,6 +85,7 @@ function handleCommand(command) {
       setLayout()
       break
     case "logout":
+      // 退出登录
       logout()
       break
     default:
@@ -92,22 +99,42 @@ function logout() {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    userStore.logOut().then(() => {
+    // 修正：调用 logout 方法并等待 Promise 完成
+    userStore.logout().then(() => {
+      // 登出成功后跳转
       location.href = '/index'
+    }).catch(error => {
+      // 处理登出失败的情况
+      ElMessage.error(error || '登出失败')
     })
-  }).catch(() => { })
+  }).catch(() => {
+    // 用户取消操作，无需处理
+  })
 }
-
 // 向父组件发送修改请求
 // 设置布局，发送到index布局里
 const emits = defineEmits(['setLayout'])
 function setLayout() {
   emits('setLayout')
 }
+const tipsVisible = ref(false)
+const clickFlag = ref(false)
+const handleMouseEntry = () => {
+  if (clickFlag.value === false) {
+    tipsVisible.value = true
+  }
+}
+
+const handleMouseLeave = () => {
+  tipsVisible.value = false
+  clickFlag.value = false
+}
 
 // 切换主题
 function toggleTheme() {
   settingsStore.toggleTheme()
+  clickFlag.value = true
+  tipsVisible.value = false
 }
 </script>
 
