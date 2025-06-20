@@ -16,8 +16,10 @@ const props = defineProps({
 // 计算使用率值
 const gaugeValue = computed(() => {
   // 根据监控类型选择不同的使用率字段
+  // todo 这里后续改成统一的usage，不要去判断了
   switch (props.monitor.title) {
     case 'cpu':
+      // 由于传递的值需要float类型，后端传递数据类型要改
       return parseUsage(props.monitor.data.cpuUsage);
     case 'memory':
       return parseUsage(props.monitor.data.memoryUsage);
@@ -27,6 +29,7 @@ const gaugeValue = computed(() => {
       // 使用新的 heapUsage 字段
       return parseUsage(props.monitor.data.heapUsage);
     default:
+      // 模糊查询了
       { const usageKey = Object.keys(props.monitor.data).find(key => 
         key.toLowerCase().includes('usage')
       );
@@ -42,6 +45,7 @@ function parseUsage(usageStr) {
 }
 
 // 创建过滤后的数据对象（排除使用率字段）
+// todo 这里后续要调整数据结构，不放在data里
 const filteredData = computed(() => {
   const data = {...props.monitor.data};
   
